@@ -1,0 +1,141 @@
+/* Slide in from left and fade out for comments */
+.comment-slide-enter {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+.comment-slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.comment-slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+.comment-slide-exit-active {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Custom scrollbar for comments section and textarea */
+.comment-section-scroll::-webkit-scrollbar,
+.comment-inputbox-scroll::-webkit-scrollbar {
+  width: 10px;
+  background: #333;
+  border-radius: 8px;
+}
+.comment-section-scroll::-webkit-scrollbar-thumb,
+.comment-inputbox-scroll::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 8px;
+}
+.comment-section-scroll::-webkit-scrollbar-thumb:hover,
+.comment-inputbox-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+  filter: brightness(1.2);
+}
+
+/* For Firefox */
+.comment-section-scroll,
+.comment-inputbox-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) #333;
+}
+
+.comment-inputbox-scroll {
+  background: var(--bg-input);
+  color: var(--text-main);
+  border: 1.5px solid #444;
+  border-radius: 0.7rem;
+  transition: border 0.2s;
+}
+.comment-inputbox-scroll:focus {
+  border: 1.5px solid var(--accent);
+  outline: none;
+  background: var(--bg-input);
+  color: var(--text-main);
+}
+
+.comment-inputbox-scroll::-webkit-input-placeholder {
+  color: var(--accent);
+  opacity: 0.6;
+}
+.comment-inputbox-scroll::-moz-placeholder {
+  color: var(--accent);
+  opacity: 0.6;
+}
+.comment-inputbox-scroll:-ms-input-placeholder {
+  color: var(--accent);
+  opacity: 0.6;
+}
+.comment-inputbox-scroll::placeholder {
+  color: var(--accent);
+  opacity: 0.6;
+} 
+
+/* Sliding dictionary panel */
+.dictionary-panel {
+  position: fixed;
+  top: 64px; /* below navbar */
+  left: 0;
+  height: calc(100vh - 64px);
+  width: 270px;
+  max-width: 90vw;
+  background: var(--bg-input);
+  color: var(--text-main);
+  /* Remove top box-shadow, only right shadow for separation */
+  box-shadow: 4px 0 24px -4px rgba(0,0,0,0.13);
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
+  z-index: 1200;
+  transform: translateX(-100%);
+  transition: transform 0.38s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.2rem 1.2rem 2rem 1.2rem;
+}
+.dictionary-panel.open {
+  transform: translateX(0);
+}
+
+.shrink-for-dictionary {
+  transition: margin-left 0.38s cubic-bezier(0.4,0,0.2,1), width 0.38s cubic-bezier(0.4,0,0.2,1);
+  margin-left: 294px; /* 270px panel + 24px gap */
+  width: calc(100% - 294px);
+}
+
+.dictionary-panel-gap {
+  width: 24px;
+  min-width: 24px;
+  height: 100vh;
+  display: inline-block;
+}
+
+@media (max-width: 600px) {
+  .dictionary-panel {
+    width: 98vw;
+    min-width: 0;
+    padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+    box-shadow: none;
+  }
+  .shrink-for-dictionary {
+    margin-left: 98vw;
+    width: 2vw;
+  }
+  .dictionary-panel-gap {
+    width: 0;
+    min-width: 0;
+  }
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 

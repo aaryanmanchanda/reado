@@ -1,0 +1,605 @@
+/* Slide in from left and fade out for comments */
+.comment-slide-enter {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+.comment-slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.comment-slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+.comment-slide-exit-active {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Custom scrollbar for comments section and textarea */
+.comment-section-scroll::-webkit-scrollbar,
+.comment-inputbox-scroll::-webkit-scrollbar {
+  width: 10px;
+  background: #333;
+  border-radius: 8px;
+}
+.comment-section-scroll::-webkit-scrollbar-thumb,
+.comment-inputbox-scroll::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 8px;
+}
+.comment-section-scroll::-webkit-scrollbar-thumb:hover,
+.comment-inputbox-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+  filter: brightness(1.2);
+}
+
+/* For Firefox */
+.comment-section-scroll,
+.comment-inputbox-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) #333;
+}
+
+.comment-inputbox-scroll {
+  background: var(--bg-input);
+  color: var(--text-main);
+  border: 1.5px solid #444;
+  border-radius: 0.7rem;
+  transition: border 0.2s;
+}
+.comment-inputbox-scroll:focus {
+  border: 1.5px solid var(--accent);
+  outline: none;
+  background: var(--bg-input);
+  color: var(--text-main);
+}
+
+.comment-inputbox-scroll::-webkit-input-placeholder {
+  color: var(--accent);
+  opacity: 0.6;
+}
+.comment-inputbox-scroll::-moz-placeholder {
+  color: var(--accent);
+  opacity: 0.6;
+}
+.comment-inputbox-scroll:-ms-input-placeholder {
+  color: var(--accent);
+  opacity: 0.6;
+}
+.comment-inputbox-scroll::placeholder {
+  color: var(--accent);
+  opacity: 0.6;
+} 
+
+/* Sliding dictionary panel */
+.dictionary-panel {
+  position: fixed;
+  top: 64px; /* below navbar */
+  left: 0;
+  height: calc(100vh - 64px);
+  width: 270px;
+  max-width: 90vw;
+  background: var(--bg-input);
+  color: var(--text-main);
+  /* Remove top box-shadow, only right shadow for separation */
+  box-shadow: 4px 0 24px -4px rgba(0,0,0,0.13);
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
+  z-index: 1200;
+  transform: translateX(-100%);
+  transition: transform 0.38s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.2rem 1.2rem 2rem 1.2rem;
+}
+.dictionary-panel.open {
+  transform: translateX(0);
+}
+
+.shrink-for-dictionary {
+  transition: margin-left 0.38s cubic-bezier(0.4,0,0.2,1), width 0.38s cubic-bezier(0.4,0,0.2,1);
+  margin-left: 294px; /* 270px panel + 24px gap */
+  width: calc(100% - 294px);
+}
+
+.dictionary-panel-gap {
+  width: 24px;
+  min-width: 24px;
+  height: 100vh;
+  display: inline-block;
+}
+
+/* Responsive base styles */
+.progress-bar-container {
+  overflow-x: hidden;
+}
+
+.progress-bar-main-layout {
+  flex-wrap: wrap;
+}
+
+.main-slider-area {
+  min-width: 0;
+}
+
+/* Tablet and below */
+@media (max-width: 1024px) {
+  .progress-bar-main-layout {
+    flex-direction: column;
+  }
+  
+  .main-slider-area {
+    width: 100%;
+    height: auto;
+    min-height: calc(100vh - 64px);
+  }
+  
+  .book-panel {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    order: -1;
+    padding: 1.5vh 2vw !important;
+    max-height: 50vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+  
+  .book-panel.collapsed {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-height: none !important;
+  }
+  
+  /* Fix horizontal tablet scrolling */
+  @media (orientation: landscape) and (max-height: 800px) {
+    .book-panel {
+      max-height: 45vh !important;
+      overflow-y: auto !important;
+    }
+    
+    .book-panel.collapsed {
+      max-height: 100vh !important;
+    }
+  }
+  
+  /* Ensure book search results can scroll */
+  .book-panel .comment-section-scroll,
+  .book-panel .book-results-scroll,
+  .book-panel .recent-books-scroll {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Fix for recently read section */
+  .book-panel .recent-books-scroll {
+    max-height: clamp(150px, 25vh, 200px) !important;
+  }
+  
+  .book-panel .book-results-scroll {
+    max-height: clamp(200px, 30vh, 260px) !important;
+  }
+  
+  /* Ensure book panel itself can scroll on tablets */
+  @media (max-width: 1024px) and (orientation: landscape) {
+    .book-panel:not(.collapsed) {
+      max-height: 50vh !important;
+      overflow-y: auto !important;
+    }
+  }
+  
+  .slider-container {
+    width: min(90vw, 95%) !important;
+    max-width: 100% !important;
+  }
+  
+  .comment-input-container {
+    width: 95% !important;
+    max-width: 100% !important;
+  }
+  
+  .comments-container {
+    width: 95% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Mobile landscape and small tablets */
+@media (max-width: 768px) {
+  .navigation-buttons {
+    gap: clamp(0.5rem, 2vw, 1rem) !important;
+  }
+  
+  .nav-button,
+  .action-button {
+    width: clamp(40px, 8vw, 50px) !important;
+    height: clamp(40px, 8vw, 50px) !important;
+    font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+  }
+  
+  .comment-card {
+    min-width: calc(50% - 0.6rem) !important;
+    max-width: calc(50% - 0.6rem) !important;
+  }
+  
+  .book-cover {
+    width: clamp(100px, 25vw, 140px) !important;
+    height: clamp(140px, 35vw, 200px) !important;
+  }
+}
+
+/* Navbar responsive styles */
+@media (max-width: 768px) {
+  .navbar-responsive {
+    padding: 0 0.5rem;
+  }
+  
+  .navbar-logo {
+    font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+    margin-left: 0.5rem !important;
+  }
+  
+  .navbar-right {
+    gap: 0.4rem !important;
+    margin-right: 0.5rem !important;
+  }
+  
+  .theme-label {
+    display: none;
+  }
+  
+  .user-name {
+    display: none;
+  }
+  
+  .logout-btn,
+  .login-btn {
+    font-size: clamp(0.75rem, 3vw, 0.9rem) !important;
+    padding: 0.4em 0.8em !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-logo {
+    font-size: clamp(1rem, 6vw, 1.5rem) !important;
+    letter-spacing: 1px !important;
+  }
+  
+  .theme-select {
+    font-size: 0.75rem !important;
+    padding: 0.3em 0.6em !important;
+  }
+  
+  .user-avatar {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
+/* Comment section layout fixes */
+@media (max-width: 768px) {
+  .sort-menu {
+    justify-content: flex-start !important;
+    margin-top: 0 !important;
+  }
+  
+  .nsfw-spoiler-toggles {
+    top: clamp(8px, 1.5vh, 10px) !important;
+    right: clamp(8px, 2vw, 16px) !important;
+    justify-content: flex-end !important;
+  }
+  
+  .comments-container {
+    padding-top: clamp(2.5rem, 8vh, 3.5rem) !important;
+  }
+}
+
+/* Mobile portrait */
+@media (max-width: 600px) {
+  .dictionary-panel {
+    width: 98vw;
+    min-width: 0;
+    padding: clamp(1rem, 3vw, 1.2rem) clamp(0.7rem, 2vw, 0.7rem);
+    box-shadow: none;
+  }
+  
+  .shrink-for-dictionary {
+    margin-left: 98vw;
+    width: 2vw;
+  }
+  
+  .dictionary-panel-gap {
+    width: 0;
+    min-width: 0;
+  }
+  
+  .progress-bar-main-layout {
+    padding-top: 64px;
+  }
+  
+  .main-slider-area {
+    padding: 0.5rem;
+  }
+  
+  .comment-input-container {
+    flex-direction: column;
+    gap: 0.8rem !important;
+    padding: 0.8rem !important;
+  }
+  
+  .spoiler-toggle-btn,
+  .post-comment-btn {
+    width: 100%;
+    min-width: auto !important;
+    height: auto !important;
+    padding: 0.6rem !important;
+  }
+  
+  .comments-container {
+    height: clamp(150px, 35vh, 250px) !important;
+    padding: 0.8rem !important;
+    gap: 0.8rem !important;
+  }
+  
+  .comment-card {
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .nsfw-spoiler-toggles {
+    position: absolute !important;
+    top: clamp(8px, 1.5vh, 10px) !important;
+    right: clamp(8px, 2vw, 16px) !important;
+    width: auto !important;
+    margin-bottom: 0 !important;
+    justify-content: flex-end !important;
+  }
+  
+  .sort-menu {
+    justify-content: flex-start !important;
+    margin-top: 0 !important;
+  }
+  
+  .comments-container {
+    padding-top: clamp(2.5rem, 8vh, 3.5rem) !important;
+  }
+  
+  .navigation-buttons {
+    gap: 0.6rem !important;
+    margin-bottom: 1vh !important;
+  }
+  
+  .nav-button,
+  .action-button {
+    width: clamp(38px, 10vw, 48px) !important;
+    height: clamp(38px, 10vw, 48px) !important;
+  }
+  
+  .slider-container {
+    width: 95% !important;
+  }
+  
+  .book-panel {
+    padding: 1vh 1.5vw !important;
+  }
+  
+  .book-search-input {
+    font-size: clamp(0.85rem, 3vw, 1rem) !important;
+    padding: 0.7rem 1rem !important;
+  }
+  
+  .book-cover {
+    width: clamp(90px, 30vw, 120px) !important;
+    height: clamp(130px, 40vw, 180px) !important;
+  }
+  
+  .book-title {
+    font-size: clamp(0.9rem, 3vw, 1.2rem) !important;
+  }
+  
+  .page-counter {
+    font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+  }
+}
+
+/* Very small mobile devices */
+@media (max-width: 400px) {
+  .comment-input-container {
+    padding: 0.6rem !important;
+  }
+  
+  .comments-container {
+    padding: 0.6rem !important;
+    gap: 0.6rem !important;
+  }
+  
+  .navigation-buttons {
+    gap: 0.4rem !important;
+  }
+  
+  .nav-button,
+  .action-button {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1.2rem !important;
+  }
+  
+  .slider-container {
+    width: 98% !important;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1920px) {
+  .comment-input-container,
+  .comments-container {
+    max-width: 1200px;
+  }
+  
+  .slider-container {
+    max-width: 900px;
+  }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 2560px) {
+  .comment-input-container,
+  .comments-container {
+    max-width: 1400px;
+  }
+  
+  .slider-container {
+    max-width: 1100px;
+  }
+}
+
+/* Height-based media queries for better mobile landscape support */
+@media (max-height: 600px) and (orientation: landscape) {
+  .main-slider-area {
+    height: auto;
+    min-height: calc(100vh - 64px);
+  }
+  
+  .comments-container {
+    height: clamp(120px, 30vh, 200px) !important;
+  }
+  
+  .comment-input-container {
+    margin-top: 1rem !important;
+    margin-bottom: 0.8rem !important;
+  }
+  
+  .navigation-buttons {
+    margin-bottom: 1vh !important;
+  }
+  
+  .book-panel {
+    padding: 1vh 1.5vw !important;
+  }
+}
+
+/* Spoiler overlay centering and text fitting */
+.spoiler-overlay,
+.nsfw-overlay {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  overflow: hidden !important;
+}
+
+.spoiler-overlay span,
+.nsfw-overlay span {
+  display: inline-block;
+  text-align: center;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Allow word wrapping in motivational messages at word boundaries */
+.progress-message,
+.select-book-prompt {
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  hyphens: auto !important;
+  white-space: normal !important;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .nav-button,
+  .action-button,
+  .sort-btn,
+  .toggle-btn,
+  .post-comment-btn,
+  .spoiler-toggle-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .comment-card {
+    padding: 1rem !important;
+  }
+}
+
+/* Bookmark menu responsive */
+@media (max-width: 768px) {
+  .bookmark-menu {
+    min-width: 180px !important;
+    max-width: 90vw !important;
+  }
+}
+
+/* Dictionary panel responsive improvements */
+@media (max-width: 1024px) {
+  .shrink-for-dictionary {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  
+  .dictionary-panel {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: calc(100vh - 64px) !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  
+  .dictionary-panel-gap {
+    display: none !important;
+  }
+}
+
+/* Ensure proper overflow handling */
+.progress-bar-container {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.main-slider-area {
+  overflow-x: hidden;
+}
+
+.comments-container {
+  overflow-x: hidden;
+}
+
+/* Improve text readability on small screens */
+@media (max-width: 480px) {
+  .comment-card {
+    font-size: 0.85rem !important;
+  }
+  
+  .book-title {
+    font-size: clamp(0.8rem, 4vw, 1rem) !important;
+  }
+  
+  .progress-message,
+  .select-book-prompt {
+    font-size: clamp(1rem, 4vw, 1.3rem) !important;
+  }
+}
+
+/* Fix for very wide screens */
+@media (min-width: 2560px) {
+  .book-panel {
+    max-width: 450px;
+  }
+} 

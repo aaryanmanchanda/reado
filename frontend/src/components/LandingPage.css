@@ -1,0 +1,228 @@
+/* Landing Page Styles */
+
+.landing-page {
+  overflow-x: hidden;
+  position: relative;
+  background-color: var(--bg-main);
+  background-image: 
+    linear-gradient(var(--accent) 1px, transparent 1px),
+    linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: 0 0;
+}
+
+/* Animated Background Patterns - radial gradients */
+.landing-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, var(--accent) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, var(--accent) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, var(--accent) 0%, transparent 50%);
+  opacity: 0.08;
+  z-index: 0;
+  pointer-events: none;
+  animation: backgroundPulse 20s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+/* Decorative diagonal line patterns */
+.landing-page::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 35px, var(--accent) 35px, var(--accent) 36px),
+    repeating-linear-gradient(-45deg, transparent, transparent 35px, var(--accent) 35px, var(--accent) 36px);
+  opacity: 0.04;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+@keyframes backgroundPulse {
+  0%, 100% {
+    opacity: 0.08;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.12;
+    transform: scale(1.05);
+  }
+}
+
+/* Floating decorative elements */
+.floating-shape {
+  position: fixed;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.08;
+  animation: float 15s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+}
+
+.floating-shape-1 {
+  width: clamp(200px, 30vw, 400px);
+  height: clamp(200px, 30vw, 400px);
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.floating-shape-2 {
+  width: clamp(150px, 25vw, 300px);
+  height: clamp(150px, 25vw, 300px);
+  top: 60%;
+  right: 10%;
+  animation-delay: 5s;
+}
+
+.floating-shape-3 {
+  width: clamp(100px, 20vw, 200px);
+  height: clamp(100px, 20vw, 200px);
+  bottom: 20%;
+  left: 15%;
+  animation-delay: 10s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+  33% {
+    transform: translateY(-40px) translateX(20px) scale(1.1);
+  }
+  66% {
+    transform: translateY(40px) translateX(-20px) scale(0.9);
+  }
+}
+
+/* Ensure content is above background */
+.landing-page > nav {
+  position: relative;
+  z-index: 100;
+}
+
+.landing-page > div,
+.landing-page > section {
+  position: relative;
+  z-index: 1;
+}
+
+.static-landing-content {
+  position: relative !important;
+  z-index: 10 !important;
+  background: transparent !important;
+}
+
+/* Ensure floating shapes don't cover content */
+.floating-shape {
+  z-index: 0 !important;
+}
+
+/* Make sure background patterns are behind content */
+.landing-page::before,
+.landing-page::after {
+  z-index: 0 !important;
+}
+
+/* Hero section specific background */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  opacity: 0.1;
+  animation: rotate 30s linear infinite;
+  z-index: 0;
+  filter: blur(60px);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Additional decorative elements for sections */
+.info-section,
+.features-section,
+.how-it-works-section,
+.cta-section {
+  position: relative;
+}
+
+.info-section::before,
+.features-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at top, var(--accent) 0%, transparent 50%);
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.how-it-works-section::after,
+.cta-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(ellipse at bottom right, var(--accent) 0%, transparent 60%);
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .landing-page h1 {
+    font-size: 3rem !important;
+  }
+  
+  .landing-page p {
+    font-size: 1.2rem !important;
+  }
+  
+  .landing-page button {
+    font-size: 1.2rem !important;
+    padding: 0.8rem 2rem !important;
+  }
+  
+  /* Make feature cards single column on mobile */
+  .landing-page > div > div > div[style*="grid"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
