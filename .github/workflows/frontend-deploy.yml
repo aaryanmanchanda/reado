@@ -20,7 +20,7 @@ jobs:
       run: |
         cd frontend
         npm install
-        CI = false npm run build
+        CI=false npm run build
 
     - name: Upload to S3
       uses: jakejarvis/s3-sync-action@v0.5.1
