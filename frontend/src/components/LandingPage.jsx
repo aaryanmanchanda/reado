@@ -423,7 +423,7 @@ const LandingPage = () => {
             reado is a modern reading platform that transforms how you interact with books. 
             Track your reading progress page by page, engage with a community of readers through 
             contextual comments, and enhance your reading experience with smart bookmarks and an 
-            integrated dictionary.
+            integrated dictionary. A project by Aaryan Manchanda.
           </p>
         </div>
       </section>
