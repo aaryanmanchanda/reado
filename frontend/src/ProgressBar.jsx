@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import { COLORWAYS, NAVBAR_HEIGHT, shadeColor, applyThemeVariables } from './theme';
 import { debounce } from './utils/debounce';
 import { getRecentBooks, addRecentBook } from './utils/recentBooks';
+import apiFetch from './utils/apiFetch';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
@@ -118,6 +119,7 @@ const ProgressBar = () => {
               setUser(fullUserData);
               // Store user data in localStorage
               localStorage.setItem('user', JSON.stringify(fullUserData));
+              localStorage.setItem("token", accessToken);
               // Clean up URL
               window.history.replaceState({}, document.title, window.location.pathname);
               // Stay on /reading page (already here)
@@ -195,7 +197,7 @@ const ProgressBar = () => {
     const fetchComments = async () => {
       if (!selectedBook.bookId) return;
       try {
-        const res = await fetch(`${API_URL}/comments?bookId=${selectedBook.bookId}`);
+        const res = await apiFetch(`${API_URL}/comments?bookId=${selectedBook.bookId}`);
         if (res.ok) {
           const data = await res.json();
           // Only show comments within ±2 percent of current page
@@ -391,7 +393,7 @@ const ProgressBar = () => {
     const fetchBookmarks = async () => {
       if (!user || !selectedBook.bookId) return;
       try {
-        const res = await fetch(`${API_URL}/users/${user._id}/bookmarks`);
+        const res = await apiFetch(`${API_URL}/users/${user._id}/bookmarks`);
         if (res.ok) {
           const allBookmarks = await res.json();
           // Only show bookmarks for the current book
@@ -410,9 +412,8 @@ const ProgressBar = () => {
   const handleAddBookmark = async (color) => {
     if (!user || !selectedBook.bookId) return;
     try {
-      const res = await fetch(`${API_URL}/users/${user._id}/bookmarks`, {
+      const res = await apiFetch(`${API_URL}/users/${user._id}/bookmarks`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           bookId: selectedBook.bookId,
           page: value,
@@ -462,9 +463,8 @@ const ProgressBar = () => {
   const handleDeleteComment = async (commentId) => {
     if (!user) return;
     try {
-      const res = await fetch(`${API_URL}/comments/${commentId}`, {
+      const res = await apiFetch(`${API_URL}/comments/${commentId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user._id }),
       });
       if (res.ok) {
@@ -589,9 +589,8 @@ const ProgressBar = () => {
                     bookTitle: selectedBook.title || null,
                   };
                   try {
-                    const res = await fetch(`${API_URL}/comments`, {
+                    const res = await apiFetch(`${API_URL}/comments`, {
                       method: "POST",
-                      headers: { "Content-Type": "application/json" },
                       body: JSON.stringify(commentData),
                     });
                     if (res.ok) {
@@ -847,9 +846,8 @@ const ProgressBar = () => {
                                   alert('Please log in to vote');
                                   return;
                                 }
-                                const res = await fetch(`${API_URL}/comments/${comment._id}/like`, { 
+                                const res = await apiFetch(`${API_URL}/comments/${comment._id}/like`, { 
                                   method: 'PATCH',
-                                  headers: { 'Content-Type': 'application/json' },
                                   body: JSON.stringify({ userId: user._id })
                                 });
                               if (res.ok) {
@@ -894,9 +892,8 @@ const ProgressBar = () => {
                                   alert('Please log in to vote');
                                   return;
                                 }
-                                const res = await fetch(`${API_URL}/comments/${comment._id}/dislike`, { 
+                                const res = await apiFetch(`${API_URL}/comments/${comment._id}/dislike`, { 
                                   method: 'PATCH',
-                                  headers: { 'Content-Type': 'application/json' },
                                   body: JSON.stringify({ userId: user._id })
                                 });
                               if (res.ok) {

@@ -88,6 +88,7 @@ const LandingPage = () => {
               
               setUser(fullUserData);
               localStorage.setItem('user', JSON.stringify(fullUserData));
+              localStorage.setItem("token", accessToken);
               // Clean up URL
               window.history.replaceState({}, document.title, window.location.pathname);
               // Navigate to reading page
@@ -103,6 +104,7 @@ const LandingPage = () => {
     };
 
     // Check if user is already logged in from localStorage
+    
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));

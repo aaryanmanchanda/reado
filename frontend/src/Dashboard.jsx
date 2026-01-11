@@ -7,6 +7,7 @@ import ActivityCard from './components/ActivityCard';
 import Recommendations from './components/Recommendations';
 import { COLORWAYS, NAVBAR_HEIGHT, applyThemeVariables } from './theme';
 import { fetchBookInfoById, fetchBookInfoByTitle } from './utils/bookCache';
+import apiFetch from './utils/apiFetch';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -43,10 +44,10 @@ const Dashboard = () => {
       setError(null);
       try {
         // Fetch bookmarks
-        const bmRes = await fetch(`${API_URL}/users/${user._id}/bookmarks`);
+        const bmRes = await apiFetch(`${API_URL}/users/${user._id}/bookmarks`);
         const bookmarksData = bmRes.ok ? await bmRes.json() : [];
         // Fetch comments (all by user)
-        const cmRes = await fetch(`${API_URL}/comments?userId=${user._id}`);
+        const cmRes = await apiFetch(`${API_URL}/comments?userId=${user._id}`);
         let commentsData = cmRes.ok ? await cmRes.json() : [];
         // Fallback: filter by userId on frontend if backend does not support userId query
         if (Array.isArray(commentsData) && commentsData.length && commentsData[0].userId) {
