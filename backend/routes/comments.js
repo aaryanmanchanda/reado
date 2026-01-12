@@ -237,12 +237,15 @@ router.patch('/:id/like', async (req, res) => {
     }
 
     // Check if user already liked - if so, remove the like
-    if (comment.likedBy.includes(userId)) {
+    // Convert to string for comparison since userId comes as string and likedBy contains ObjectIds
+    const hasLiked = comment.likedBy.some(id => id.toString() === userId);
+    if (hasLiked) {
       comment.likedBy = comment.likedBy.filter(id => id.toString() !== userId);
       comment.likes = Math.max(0, comment.likes - 1);
     } else {
       // Remove from dislikedBy if user previously disliked
-      if (comment.dislikedBy.includes(userId)) {
+      const hasDisliked = comment.dislikedBy.some(id => id.toString() === userId);
+      if (hasDisliked) {
         comment.dislikedBy = comment.dislikedBy.filter(id => id.toString() !== userId);
         comment.dislikes = Math.max(0, comment.dislikes - 1);
       }
@@ -275,12 +278,15 @@ router.patch('/:id/dislike', async (req, res) => {
     }
 
     // Check if user already disliked - if so, remove the dislike
-    if (comment.dislikedBy.includes(userId)) {
+    // Convert to string for comparison since userId comes as string and dislikedBy contains ObjectIds
+    const hasDisliked = comment.dislikedBy.some(id => id.toString() === userId);
+    if (hasDisliked) {
       comment.dislikedBy = comment.dislikedBy.filter(id => id.toString() !== userId);
       comment.dislikes = Math.max(0, comment.dislikes - 1);
     } else {
       // Remove from likedBy if user previously liked
-      if (comment.likedBy.includes(userId)) {
+      const hasLiked = comment.likedBy.some(id => id.toString() === userId);
+      if (hasLiked) {
         comment.likedBy = comment.likedBy.filter(id => id.toString() !== userId);
         comment.likes = Math.max(0, comment.likes - 1);
       }
@@ -312,8 +318,9 @@ router.get('/:id/vote-status', async (req, res) => {
       return res.status(404).json({ error: 'Comment not found' });
     }
 
-    const hasLiked = comment.likedBy.includes(userId);
-    const hasDisliked = comment.dislikedBy.includes(userId);
+    // Convert to string for comparison since userId comes as string and arrays contain ObjectIds
+    const hasLiked = comment.likedBy.some(id => id.toString() === userId);
+    const hasDisliked = comment.dislikedBy.some(id => id.toString() === userId);
 
     res.json({
       hasLiked,
