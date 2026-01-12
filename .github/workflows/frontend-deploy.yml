@@ -21,6 +21,9 @@ jobs:
           cd frontend
           npm install
           CI=false npm run build
+        env:
+          REACT_APP_OAUTH_REDIRECT_URI: ${{ secrets.REACT_APP_OAUTH_REDIRECT_URI }}
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
       - name: Upload to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
