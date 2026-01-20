@@ -120,7 +120,7 @@ const LandingPage = () => {
     } else {
       // User not authenticated, redirect to Google OAuth
       const clientId = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID || '796244288003-icno500m7k5r09bev7s288ar5trtui07.apps.googleusercontent.com';
-      const redirectUri = process.env.REACT_APP_OAUTH_REDIRECT_URI || window.location.origin;
+      const redirectUri = "https://www.reado.co.in";
       window.location.href =
         `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=profile%20email`;
     }
