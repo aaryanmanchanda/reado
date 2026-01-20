@@ -10,6 +10,17 @@ import apiFetch from './utils/apiFetch';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
+function parseJwtPayload(token) {
+  try {
+    const part = token.split('.')[1];
+    if (!part) return null;
+    const base64 = part.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
+  } catch (e) {
+    return null;
+  }
+}
+
 const ProgressBar = () => {
   const [value, setValue] = useState(0);
   const [hover, setHover] = useState(false);
@@ -75,89 +86,38 @@ const ProgressBar = () => {
     }
   };
 
-  // Handle OAuth response on component mount
+  // On mount: handle ?token= from OAuth callback, or restore user from localStorage, or redirect to /
   useEffect(() => {
-    const handleOAuthResponse = async () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const params = new URLSearchParams(hash.substring(1));
-        const accessToken = params.get('access_token');
-        
-        if (accessToken) {
-          try {
-            // Fetch user profile from Google
-            const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-              headers: {
-                'Authorization': `Bearer ${accessToken}`
-              }
-            });
-            const userData = await response.json();
-            
-            // Send user data to backend
-            const backendResponse = await fetch(`${API_URL}/users/auth/google`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                googleId: userData.id,
-                name: userData.name,
-                email: userData.email,
-                picture: userData.picture,
-                accessToken: accessToken
-              })
-            });
-            
-            if (backendResponse.ok) {
-              const backendUser = await backendResponse.json();
-              const fullUserData = {
-                ...userData,
-                accessToken,
-                _id: backendUser.user._id // Store the MongoDB user ID
-              };
-              
-              setUser(fullUserData);
-              // Store user data in localStorage
-              localStorage.setItem('user', JSON.stringify(fullUserData));
-              localStorage.setItem("token", accessToken);
-              // Clean up URL
-              window.history.replaceState({}, document.title, window.location.pathname);
-              // Stay on /reading page (already here)
-            } else {
-              console.error('Failed to save user to backend');
-            }
-          } catch (error) {
-            console.error('Error fetching user data:', error);
-          }
-        }
-      }
-    };
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromUrl = params.get('token');
 
-    // Check if user is already logged in from localStorage
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    if (tokenFromUrl) {
+      const payload = parseJwtPayload(tokenFromUrl);
+      if (payload && payload._id) {
+        localStorage.setItem('token', tokenFromUrl);
+        const userData = { _id: payload._id, name: payload.name, email: payload.email, picture: payload.picture };
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+      } else {
+        navigate('/');
+      }
+      window.history.replaceState({}, document.title, window.location.pathname);
     } else {
-      // If no user and no OAuth hash, redirect to landing page
-      const hash = window.location.hash;
-      if (!hash || !hash.includes('access_token')) {
-        // Small delay to avoid redirect loop during OAuth processing
-        setTimeout(() => {
-          if (!localStorage.getItem('user')) {
-            navigate('/');
-          }
-        }, 100);
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      } else {
+        navigate('/');
       }
     }
-
-    handleOAuthResponse();
   }, [navigate]);
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
       setUser(null);
       localStorage.removeItem('user');
-      navigate('/'); // Redirect to landing page
+      localStorage.removeItem('token');
+      navigate('/');
     }
   };
 

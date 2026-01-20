@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { applyThemeVariables, COLORWAYS, NAVBAR_HEIGHT } from '../theme';
 import './LandingPage.css';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-
 const LandingPage = () => {
   const [user, setUser] = useState(null);
   const [theme, setTheme] = useState(() => {
@@ -45,84 +43,19 @@ const LandingPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Check for existing user and handle OAuth callback
+  // Check if user is already logged in from localStorage
   useEffect(() => {
-    const handleOAuthResponse = async () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const params = new URLSearchParams(hash.substring(1));
-        const accessToken = params.get('access_token');
-        
-        if (accessToken) {
-          try {
-            // Fetch user profile from Google
-            const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-              headers: {
-                'Authorization': `Bearer ${accessToken}`
-              }
-            });
-            const userData = await response.json();
-            
-            // Send user data to backend
-            const backendResponse = await fetch(`${API_URL}/users/auth/google`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                googleId: userData.id,
-                name: userData.name,
-                email: userData.email,
-                picture: userData.picture,
-                accessToken: accessToken
-              })
-            });
-            
-            if (backendResponse.ok) {
-              const backendUser = await backendResponse.json();
-              const fullUserData = {
-                ...userData,
-                accessToken,
-                _id: backendUser.user._id
-              };
-              
-              setUser(fullUserData);
-              localStorage.setItem('user', JSON.stringify(fullUserData));
-              localStorage.setItem("token", accessToken);
-              // Clean up URL
-              window.history.replaceState({}, document.title, window.location.pathname);
-              // Navigate to reading page
-              navigate('/reading');
-            } else {
-              console.error('Failed to save user to backend');
-            }
-          } catch (error) {
-            console.error('Error fetching user data:', error);
-          }
-        }
-      }
-    };
-
-    // Check if user is already logged in from localStorage
-    
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
-
-    handleOAuthResponse();
-  }, [navigate]);
+  }, []);
 
   const handleStartReading = () => {
     if (user) {
-      // User is authenticated, navigate to reading page
       navigate('/reading');
     } else {
-      // User not authenticated, redirect to Google OAuth
-      const clientId = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID || '796244288003-icno500m7k5r09bev7s288ar5trtui07.apps.googleusercontent.com';
-      const redirectUri = "https://www.reado.co.in";
-      window.location.href =
-        `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=profile%20email`;
+      window.location.href = 'https://api.reado.co.in/users/auth/google';
     }
   };
 

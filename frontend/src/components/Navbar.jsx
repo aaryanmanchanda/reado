@@ -109,8 +109,7 @@ const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }
         ) : (
           <button
             onClick={() => {
-              window.location.href =
-                'https://accounts.google.com/o/oauth2/v2/auth?client_id=796244288003-icno500m7k5r09bev7s288ar5trtui07.apps.googleusercontent.com&redirect_uri=http://localhost:3000&response_type=token&scope=profile%20email';
+              window.location.href = 'https://api.reado.co.in/users/auth/google';
             }}
             style={{
               marginLeft: 16,
