@@ -4,9 +4,24 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
+const allowedOrigins = [
+  "https://www.reado.co.in",
+  "https://reado.co.in",
+  "https://d3543ik91lsun2.cloudfront.net",
+  "http://localhost:3000"
+];
+
 // CORS middleware at the very top, with explicit config for dev
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
