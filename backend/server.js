@@ -28,9 +28,16 @@ app.get('/test-cors', (req, res) => {
   res.json({ message: 'CORS is working!' });
 });
 
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 const commentRoutes = require('./routes/comments');
 const userRoutes = require('./routes/users');
+const { authGoogle, authGoogleCallback } = require('./routes/authGoogle');
+
+// OAuth routes mounted on app directly so /users/auth/google is always matched
+app.get('/users/auth/google', authGoogle);
+app.get('/users/auth/google/callback', authGoogleCallback);
+
 app.use('/comments', commentRoutes);
 app.use('/users', userRoutes);
+
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
