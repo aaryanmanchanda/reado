@@ -24,6 +24,7 @@ jobs:
         env:
           REACT_APP_OAUTH_REDIRECT_URI: ${{ secrets.REACT_APP_OAUTH_REDIRECT_URI }}
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          REACT_APP_GOOGLE_BOOKS_API_KEY: ${{ secrets.REACT_APP_GOOGLE_BOOKS_API_KEY }}
 
       - name: Upload to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
