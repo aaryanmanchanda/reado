@@ -71,6 +71,8 @@ const LandingPage = () => {
       
       {/* Navbar */}
       <nav
+        className="landing-nav"
+        aria-label="Main navigation"
         style={{
           width: '100%',
           height: NAVBAR_HEIGHT,
@@ -97,11 +99,13 @@ const LandingPage = () => {
         >
           reado
         </div>
-        <div style={{ marginLeft: 'auto', marginRight: '2vw', display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '1.1rem', marginRight: 8 }}>Theme:</span>
+        <div className="landing-nav-right" style={{ marginLeft: 'auto', marginRight: '2vw', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <label htmlFor="landing-theme-select" className="landing-theme-label" style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '1.1rem', marginRight: 8 }}>Theme:</label>
           <select
+            id="landing-theme-select"
             value={theme}
             onChange={e => handleThemeChange(e.target.value)}
+            aria-label="Choose color theme"
             style={{
               background: 'var(--bg-panel)',
               color: 'var(--accent)',
@@ -124,8 +128,11 @@ const LandingPage = () => {
 
 
       {/* Main Content - Static Landing Page */}
-      <div
+      <main
+  id="main-content"
   className="static-landing-content"
+  role="main"
+  tabIndex={-1}
   style={{
     marginTop: NAVBAR_HEIGHT,
     minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
@@ -183,6 +190,7 @@ const LandingPage = () => {
 
           {/* Features */}
           <div
+            className="landing-features-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',
@@ -257,6 +265,7 @@ const LandingPage = () => {
           {/* CTA Button */}
           <button
             onClick={handleStartReading}
+            aria-label={user ? 'Continue to reading page' : 'Start reading with Google sign in'}
             style={{
               background: 'var(--accent)',
               color: 'var(--text-dark)',
@@ -310,7 +319,7 @@ const LandingPage = () => {
             </div>
           )}
         </div>
-      </div>
+      </main>
 
       {/* New Parallax Sections - Scroll in after static content */}
       {/* What is reado Section */}
@@ -559,7 +568,7 @@ const LandingPage = () => {
             ].map((item, index) => (
               <div
                 key={index}
-                className={`fade-in-right delay-${index} ${visibleSections.has(8) ? 'visible' : ''}`}
+                className={`landing-how-step fade-in-right delay-${index} ${visibleSections.has(8) ? 'visible' : ''}`}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -690,6 +699,7 @@ const LandingPage = () => {
           </p>
           <button
             onClick={handleStartReading}
+            aria-label={user ? 'Continue to reading page' : 'Get started free with Google sign in'}
             style={{
               background: 'var(--accent)',
               color: 'var(--text-dark)',

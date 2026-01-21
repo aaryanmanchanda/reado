@@ -20,6 +20,7 @@ function AppContent() {
   
   return (
     <>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       {/* Fade overlay */}
       <div 
         className={`page-fade-overlay ${isTransitioning ? 'active' : ''}`}

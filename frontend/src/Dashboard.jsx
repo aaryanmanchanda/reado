@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import './ProgressBar.css';
+import './Dashboard.css';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ProfileCard from './components/ProfileCard';
@@ -182,6 +183,10 @@ const Dashboard = () => {
       <Navbar theme={theme} onThemeChange={handleThemeChange} user={user} onLogout={handleLogout} showUserNavToDashboard={false} />
       {/* Main dashboard area */}
       <div
+        id="main-content"
+        className="dashboard-main"
+        role="main"
+        tabIndex={-1}
         style={{
           minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
           paddingTop: NAVBAR_HEIGHT + 56,
@@ -193,7 +198,8 @@ const Dashboard = () => {
           alignItems: 'center',
           justifyContent: 'flex-start',
           background: 'var(--bg-main)',
-          width: '100vw',
+          width: '100%',
+          maxWidth: '100%',
           boxSizing: 'border-box',
           position: 'relative',
           margin: 0,
@@ -201,6 +207,7 @@ const Dashboard = () => {
       >
         {/* Dashboard area: profile + activity cards in a single rectangle */}
         <div
+          className="dashboard-card-container"
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -218,6 +225,7 @@ const Dashboard = () => {
         >
             <button
                 onClick={() => navigate('/')}
+                aria-label="Back to home"
                 style={{
                   background: 'var(--accent)',
                   color: 'var(--text-dark)',
@@ -238,9 +246,8 @@ const Dashboard = () => {
                 ← Back
               </button>
           {/* Top row: profile + activity cards */}
-          <div style={{ display: 'flex', flexDirection: 'row', gap: 80, width: '100%', justifyContent: 'flex-start' }}>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: 220, width: 260, flex: '0 0 260px', margin: 0, zIndex: 1, paddingTop: 0 }}>
+          <div className="dashboard-top-row" style={{ display: 'flex', flexDirection: 'row', gap: 80, width: '100%', justifyContent: 'flex-start' }}>
+            <div className="dashboard-profile-col" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: 220, width: 260, flex: '0 0 260px', margin: 0, zIndex: 1, paddingTop: 0 }}>
               <ProfileCard user={user} theme={theme} />
             </div>
             <ActivityCard loading={loading} error={error} comments={comments} bookmarks={bookmarks} bookInfoMap={bookInfoMap} />

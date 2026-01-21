@@ -1,11 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NAVBAR_HEIGHT, COLORWAYS } from '../theme';
+import './Navbar.css';
 
 const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }) => {
   const navigate = useNavigate();
   return (
     <nav
+      className="navbar-app"
+      aria-label="Main navigation"
       style={{
         width: '100%',
         height: NAVBAR_HEIGHT,
@@ -20,6 +23,7 @@ const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }
       }}
     >
       <div
+        className="navbar-logo"
         style={{
           fontFamily: '"Futura"',
           fontSize: '2.3rem',
@@ -37,11 +41,13 @@ const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }
       >
         reado
       </div>
-      <div style={{ marginLeft: 'auto', marginRight: '2vw', display: 'flex', alignItems: 'center', gap: 12 }}>
-        <span style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '1.1rem', marginRight: 8 }}>Theme:</span>
+      <div className="navbar-right" style={{ marginLeft: 'auto', marginRight: '2vw', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <label htmlFor="navbar-theme-select" className="navbar-theme-label" style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '1.1rem', marginRight: 8 }}>Theme:</label>
         <select
+          id="navbar-theme-select"
           value={theme}
           onChange={e => onThemeChange && onThemeChange(e.target.value)}
+          aria-label="Choose color theme"
           style={{
             background: 'var(--bg-panel)',
             color: 'var(--accent)',
@@ -61,6 +67,10 @@ const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }
         {user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 16 }}>
             <div
+              role={showUserNavToDashboard ? 'button' : undefined}
+              tabIndex={showUserNavToDashboard ? 0 : undefined}
+              onKeyDown={e => { if (showUserNavToDashboard && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); navigate('/dashboard'); } }}
+              aria-label={showUserNavToDashboard ? 'Go to Dashboard' : undefined}
               style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: showUserNavToDashboard ? 'pointer' : 'default' }}
               onClick={() => showUserNavToDashboard ? navigate('/dashboard') : null}
               title={showUserNavToDashboard ? 'Go to Dashboard' : undefined}
@@ -75,7 +85,7 @@ const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }
                   border: '2px solid var(--accent)'
                 }}
               />
-              <span style={{
+              <span className="navbar-user-name" style={{
                 color: 'var(--accent)',
                 fontWeight: 600,
                 fontSize: '1rem',
@@ -87,6 +97,7 @@ const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }
               </span>
             </div>
             <button
+              className="logout-btn"
               onClick={onLogout}
               style={{
                 background: 'var(--accent)',
@@ -108,9 +119,11 @@ const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }
           </div>
         ) : (
           <button
+            className="login-btn"
             onClick={() => {
               window.location.href = 'https://api.reado.co.in/users/auth/google';
             }}
+            aria-label="Log in with Google"
             style={{
               marginLeft: 16,
               background: 'var(--accent)',

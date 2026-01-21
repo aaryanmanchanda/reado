@@ -2,6 +2,7 @@ import React from 'react';
 
 const Recommendations = ({ recLoading, recError, recommendations }) => (
   <div
+    className="recommendations-card"
     style={{
       background: 'var(--bg-main)',
       borderRadius: 18,
@@ -32,9 +33,9 @@ const Recommendations = ({ recLoading, recError, recommendations }) => (
       ) : recommendations.length === 0 ? (
         <div style={{ color: 'var(--text-main)', opacity: 0.7 }}>No recommendations yet.</div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'row', gap: 32, justifyContent: 'flex-start', width: '100%' }}>
+        <div className="recommendations-list" style={{ display: 'flex', flexDirection: 'row', gap: 32, justifyContent: 'flex-start', width: '100%' }}>
           {recommendations.map((rec, i) => (
-            <div key={rec.id || i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 140 }}>
+            <div key={rec.id || i} className="recommendation-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 140 }}>
               <div style={{ width: 90, height: 130, background: '#eee', borderRadius: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: 8 }}>
                 {rec.thumbnail ? (
                   <img src={rec.thumbnail} alt={rec.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />

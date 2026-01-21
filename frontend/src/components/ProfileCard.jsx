@@ -3,6 +3,7 @@ import { COLORWAYS } from '../theme';
 
 const ProfileCard = ({ user, theme }) => (
   <div
+    className="profile-card"
     style={{
       background: 'var(--bg-main)',
       borderRadius: 18,

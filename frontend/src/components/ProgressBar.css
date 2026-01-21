@@ -281,21 +281,28 @@
   }
 }
 
-/* Comment section layout fixes */
+/* Comment section: header (sort + NSFW/Spoiler) in flow to avoid mobile overlap */
 @media (max-width: 768px) {
-  .sort-menu {
-    justify-content: flex-start !important;
-    margin-top: 0 !important;
+  .comments-header {
+    flex-direction: row;
+    flex-wrap: wrap;
   }
-  
-  .nsfw-spoiler-toggles {
-    top: clamp(8px, 1.5vh, 10px) !important;
-    right: clamp(8px, 2vw, 16px) !important;
-    justify-content: flex-end !important;
+  .comments-header .sort-menu {
+    flex: 1 1 auto;
+    min-width: 0;
   }
-  
-  .comments-container {
-    padding-top: clamp(2.5rem, 8vh, 3.5rem) !important;
+  .comments-header .nsfw-spoiler-toggles {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 480px) {
+  .comments-header .nsfw-spoiler-toggles {
+    flex: 1 1 100%;
+  }
+  .comments-header .nsfw-spoiler-toggles .toggle-btn {
+    font-size: 0.7rem !important;
+    padding: 0.35em 0.6em !important;
   }
 }
 
@@ -349,24 +356,6 @@
   .comment-card {
     min-width: 100% !important;
     max-width: 100% !important;
-  }
-  
-  .nsfw-spoiler-toggles {
-    position: absolute !important;
-    top: clamp(8px, 1.5vh, 10px) !important;
-    right: clamp(8px, 2vw, 16px) !important;
-    width: auto !important;
-    margin-bottom: 0 !important;
-    justify-content: flex-end !important;
-  }
-  
-  .sort-menu {
-    justify-content: flex-start !important;
-    margin-top: 0 !important;
-  }
-  
-  .comments-container {
-    padding-top: clamp(2.5rem, 8vh, 3.5rem) !important;
   }
   
   .navigation-buttons {

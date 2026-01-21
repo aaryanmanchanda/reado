@@ -205,24 +205,66 @@
   pointer-events: none;
 }
 
-/* Responsive adjustments */
+/* Responsive: mobile */
 @media (max-width: 768px) {
   .landing-page h1 {
-    font-size: 3rem !important;
+    font-size: clamp(2rem, 8vw, 3rem) !important;
   }
-  
-  .landing-page p {
-    font-size: 1.2rem !important;
+
+  .landing-page .static-landing-content {
+    padding: 0 1.25rem !important;
   }
-  
-  .landing-page button {
-    font-size: 1.2rem !important;
-    padding: 0.8rem 2rem !important;
-  }
-  
-  /* Make feature cards single column on mobile */
-  .landing-page > div > div > div[style*="grid"] {
+
+  .landing-features-grid {
     grid-template-columns: 1fr !important;
+  }
+
+  .landing-nav .landing-nav-right {
+    margin-right: 1rem !important;
+  }
+
+  .landing-theme-label {
+    font-size: 0.95rem !important;
+  }
+
+  .landing-nav select {
+    font-size: 1rem !important;
+    padding: 0.4em 0.8em !important;
+  }
+
+  .landing-how-step {
+    flex-direction: column !important;
+  }
+
+  .landing-how-step > div:last-child {
+    min-width: 100% !important;
+  }
+
+  .info-section,
+  .features-section,
+  .how-it-works-section,
+  .cta-section {
+    padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-nav > div:first-child {
+    font-size: 1.6rem !important;
+    margin-left: 1rem !important;
+  }
+
+  .landing-page .static-landing-content {
+    padding: 0 1rem !important;
+  }
+
+  .landing-theme-label {
+    display: none !important;
+  }
+
+  .landing-page button {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 1.1rem !important;
   }
 }
 

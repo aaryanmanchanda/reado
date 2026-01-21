@@ -1,0 +1,151 @@
+/* Dashboard and ActivityCard mobile – retain original design language */
+
+@media (max-width: 768px) {
+  .dashboard-main {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .dashboard-card-container {
+    padding: 24px 20px 32px 20px !important;
+    gap: 28px !important;
+    margin: 0 8px !important;
+  }
+
+  .dashboard-top-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 24px !important;
+  }
+
+  .dashboard-profile-col {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  .profile-card {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 1.5rem 1.25rem !important;
+  }
+
+  .profile-card h2 {
+    font-size: 1.6rem !important;
+  }
+
+  .activity-card {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 1.2rem 1rem !important;
+    gap: 16px !important;
+  }
+
+  .activity-card .activity-excerpt {
+    max-width: 100% !important;
+  }
+
+  .activity-card h3 {
+    font-size: 1.15rem !important;
+  }
+
+  .activity-card .activity-section-label {
+    font-size: 0.95rem !important;
+  }
+
+  .recommendations-card {
+    padding: 1.2rem 1rem !important;
+  }
+
+  .recommendations-list {
+    flex-wrap: wrap !important;
+    gap: 20px !important;
+  }
+
+  .recommendation-item {
+    width: calc(33.333% - 14px) !important;
+    min-width: 90px !important;
+  }
+
+  .recommendation-item > div:first-child {
+    width: 70px !important;
+    height: 100px !important;
+  }
+
+  .recommendation-item > div:last-child {
+    font-size: 0.8rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-main {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .dashboard-card-container {
+    padding: 18px 14px 24px 14px !important;
+    gap: 22px !important;
+    margin: 0 4px !important;
+  }
+
+  .dashboard-top-row {
+    gap: 20px !important;
+  }
+
+  .profile-card {
+    padding: 1.25rem 1rem !important;
+  }
+
+  .profile-card h2 {
+    font-size: 1.4rem !important;
+  }
+
+  .recommendation-item {
+    width: calc(50% - 10px) !important;
+  }
+
+  .recommendation-item > div:first-child {
+    width: 64px !important;
+    height: 94px !important;
+  }
+
+  .recommendation-item > div:last-child {
+    font-size: 0.75rem !important;
+  }
+
+  .activity-card {
+    padding: 1rem 0.9rem !important;
+    gap: 14px !important;
+    border-radius: 14px !important;
+  }
+
+  .activity-card h3 {
+    font-size: 1.1rem !important;
+  }
+
+  .activity-card .activity-section-label {
+    font-size: 0.9rem !important;
+  }
+
+  .activity-card .activity-item {
+    gap: 12px !important;
+  }
+
+  .activity-card .activity-cover {
+    width: 40px !important;
+    height: 58px !important;
+  }
+
+  .activity-card .activity-title {
+    font-size: 0.9rem !important;
+  }
+
+  .activity-card .activity-excerpt,
+  .activity-card .activity-meta {
+    font-size: 0.88rem !important;
+  }
+}

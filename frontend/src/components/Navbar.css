@@ -1,0 +1,58 @@
+/* Navbar mobile and accessibility */
+
+.navbar-app {
+  flex-wrap: wrap;
+  min-height: 64px;
+}
+
+.navbar-logo {
+  font-size: clamp(1.2rem, 5vw, 2.3rem) !important;
+}
+
+.navbar-right {
+  gap: 8px !important;
+}
+
+@media (max-width: 768px) {
+  .navbar-app {
+    padding-left: 0.5rem;
+  }
+
+  .navbar-logo {
+    margin-left: 1rem !important;
+  }
+
+  .navbar-right {
+    margin-right: 1rem !important;
+  }
+
+  .navbar-theme-label {
+    display: none;
+  }
+
+  .navbar-user-name {
+    display: none;
+  }
+
+  .navbar-app select {
+    font-size: 0.9rem !important;
+    padding: 0.35em 0.75em !important;
+  }
+
+  .navbar-app .logout-btn,
+  .navbar-app .login-btn {
+    font-size: 0.9rem !important;
+    padding: 0.4em 0.9em !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-logo {
+    font-size: 1.25rem !important;
+  }
+
+  .navbar-app select {
+    font-size: 0.8rem !important;
+    padding: 0.3em 0.6em !important;
+  }
+}

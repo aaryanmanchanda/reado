@@ -130,6 +130,20 @@
   }
 }
 
+/* Comments header: sort + NSFW/Spoiler – stack toggles on new line on mobile to avoid overlap */
+@media (max-width: 768px) {
+  .comments-header .nsfw-spoiler-toggles {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 480px) {
+  .comments-header .nsfw-spoiler-toggles .toggle-btn {
+    font-size: 0.7rem !important;
+    padding: 0.35em 0.6em !important;
+  }
+}
+
 /* Loading spinner animation */
 @keyframes spin {
   0% {

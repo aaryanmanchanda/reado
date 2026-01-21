@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import './ProgressBar.css';
+import './components/ProgressBar.css';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { COLORWAYS, NAVBAR_HEIGHT, shadeColor, applyThemeVariables } from './theme';
@@ -456,7 +456,10 @@ const ProgressBar = () => {
       >
         {/* Main slider area */}
         <div
+          id="main-content"
           className={`main-slider-area ${isDictionaryOpen ? 'shrink-for-dictionary' : ''}`}
+          role="main"
+          tabIndex={-1}
           style={{
             flex: 1,
             display: "flex",
@@ -489,6 +492,7 @@ const ProgressBar = () => {
               onChange={e => setNewComment(e.target.value)}
               placeholder={user ? "Add a comment..." : "Log In to comment!"}
               readOnly={!user}
+              aria-label="Add a comment"
               style={{
                 flex: 1,
                 resize: "none",
@@ -512,6 +516,8 @@ const ProgressBar = () => {
               <button
                 onClick={() => setUserMarkedSpoiler(!userMarkedSpoiler)}
                 title="Mark as Spoiler"
+                aria-label="Mark as spoiler"
+                aria-pressed={userMarkedSpoiler}
                 className="spoiler-toggle-btn"
                 style={{
                   background: userMarkedSpoiler ? "var(--accent)" : "transparent",
@@ -603,6 +609,8 @@ const ProgressBar = () => {
           >
             <div
               className="comments-container"
+              role="region"
+              aria-label="Comments"
               style={{
                 width: "90%",
                 maxWidth: "min(1100px, 95vw)",
@@ -619,46 +627,54 @@ const ProgressBar = () => {
                 position: 'relative',
               }}
             >
-              {/* Reddit-style sorting menu - positioned top left */}
-              <div className="sort-menu" style={{ width: '100%', marginBottom: "clamp(8px, 1.5vh, 12px)", display: 'flex', gap: "clamp(6px, 1.5vw, 12px)", flexWrap: 'wrap', justifyContent: 'flex-start' }}>
-                {['Best', 'Top', 'New', 'Old'].map(type => (
-                  <button
-                    key={type}
-                    onClick={() => setSortType(type)}
-                    className="sort-btn"
-                    style={{
-                      background: sortType === type ? 'var(--accent)' : 'transparent',
-                      color: sortType === type ? 'var(--text-dark)' : 'var(--accent)',
-                      border: 'none',
-                      borderRadius: 8,
-                      padding: 'clamp(0.3em, 1vw, 1.1em) clamp(0.8em, 2vw, 1.1em)',
-                      fontWeight: 600,
-                      fontSize: 'clamp(0.8rem, 1.8vw, 1rem)',
-                      cursor: 'pointer',
-                      boxShadow: sortType === type ? '0 2px 8px rgba(0,0,0,0.13)' : 'none',
-                      transition: 'background 0.2s, color 0.2s',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
-              {/* NSFW and Spoiler toggle buttons - positioned top right */}
-              <div className="nsfw-spoiler-toggles" style={{
-                position: 'absolute',
-                top: "clamp(8px, 1.5vh, 10px)",
-                right: "clamp(12px, 2vw, 20px)",
-                zIndex: 2,
+              {/* Comments header: sort + NSFW/Spoiler toggles – stacked on mobile to avoid overlap */}
+              <div className="comments-header" style={{
                 display: 'flex',
-                gap: "clamp(6px, 1vw, 10px)",
                 flexWrap: 'wrap',
-                justifyContent: 'flex-end',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: '8px 12px',
+                width: '100%',
+                marginBottom: "clamp(8px, 1.5vh, 12px)",
               }}>
+                <div className="sort-menu" style={{ display: 'flex', gap: "clamp(6px, 1.5vw, 12px)", flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                  {['Best', 'Top', 'New', 'Old'].map(type => (
+                    <button
+                      key={type}
+                      onClick={() => setSortType(type)}
+                      className="sort-btn"
+                      aria-pressed={sortType === type}
+                      aria-label={`Sort comments by ${type}`}
+                      style={{
+                        background: sortType === type ? 'var(--accent)' : 'transparent',
+                        color: sortType === type ? 'var(--text-dark)' : 'var(--accent)',
+                        border: 'none',
+                        borderRadius: 8,
+                        padding: 'clamp(0.3em, 1vw, 1.1em) clamp(0.8em, 2vw, 1.1em)',
+                        fontWeight: 600,
+                        fontSize: 'clamp(0.8rem, 1.8vw, 1rem)',
+                        cursor: 'pointer',
+                        boxShadow: sortType === type ? '0 2px 8px rgba(0,0,0,0.13)' : 'none',
+                        transition: 'background 0.2s, color 0.2s',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+                <div className="nsfw-spoiler-toggles" style={{
+                  display: 'flex',
+                  gap: "clamp(6px, 1vw, 10px)",
+                  flexWrap: 'wrap',
+                  justifyContent: 'flex-end',
+                }}>
                 {displayedComments.some(c => c.nsfw) && (
                   <button
                     onClick={() => setShowNSFW(v => !v)}
                     className="toggle-btn"
+                    aria-pressed={showNSFW}
+                    aria-label={showNSFW ? 'Hide NSFW content' : 'Show NSFW content'}
                     style={{
                       background: 'var(--accent)',
                       color: 'var(--text-dark)',
@@ -681,6 +697,8 @@ const ProgressBar = () => {
                   <button
                     onClick={() => setShowSpoilers(v => !v)}
                     className="toggle-btn spoiler-toggle-right"
+                    aria-pressed={!showSpoilers}
+                    aria-label={showSpoilers ? 'Spoiler mode off' : 'Spoiler mode on'}
                     style={{
                       background: 'var(--accent)',
                       color: 'var(--text-dark)',
@@ -699,6 +717,7 @@ const ProgressBar = () => {
                     {showSpoilers ? 'No-Spoiler Mode: OFF' : 'No-Spoiler Mode: ON'}
                   </button>
                 )}
+                </div>
               </div>
               <TransitionGroup component={null}>
                 {displayedComments.map((comment, idx) => {
@@ -1345,6 +1364,11 @@ const ProgressBar = () => {
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
               onMouseMove={handleMouseMove}
+              aria-label="Current page"
+              aria-valuemin={min}
+              aria-valuemax={max}
+              aria-valuenow={value}
+              aria-valuetext={`Page ${value} of ${max}`}
               style={{
                 width: "100%",
                 height: "clamp(2.5rem, 5vh, 3.5rem)",
@@ -1512,6 +1536,7 @@ const ProgressBar = () => {
                 value={query}
                 onChange={handleSearchInput}
                 placeholder="Search books..."
+                aria-label="Search books"
                 className="book-search-input"
                 style={{
                   width: "100%",
