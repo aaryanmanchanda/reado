@@ -70,6 +70,7 @@ const ProgressBar = () => {
   const [dictLoading, setDictLoading] = useState(false);
   const [dictError, setDictError] = useState(null);
   const [deleteConfirmComment, setDeleteConfirmComment] = useState(null);
+  const bookPanelRef = useRef(null);
 
   const handleDictionarySearch = async (word) => {
     setDictLoading(true);
@@ -311,6 +312,11 @@ const ProgressBar = () => {
     const title = book.volumeInfo?.title || book.title || "Book Title";
     const bookId = book.id || book.bookId;
     
+    // If clicking the same book, don't reset progress
+    if (selectedBook.bookId === bookId) {
+      return;
+    }
+    
     const selectedBookData = {
       bookId,
       title,
@@ -319,19 +325,23 @@ const ProgressBar = () => {
     };
     
     setSelectedBook(selectedBookData);
-    setValue(0); // Reset slider to start
+    setValue(0); // Reset slider to start only when switching books
     
     // Add to recently read
     addRecentBook(selectedBookData);
     // Update recent books list
     setRecentBooks(getRecentBooks());
     
-    // On mobile, collapse the panel after selection to prevent glitch
+    // On mobile, keep panel expanded and scroll to show percentage
     if (isTouchDevice) {
-      // Small delay to allow the selection to complete
+      // Keep panel expanded to show percentage
+      setIsBookPanelCollapsed(false);
+      // Scroll to top to show percentage (search bar will be above viewport)
       setTimeout(() => {
-        setIsBookPanelCollapsed(true);
-      }, 300);
+        if (bookPanelRef.current) {
+          bookPanelRef.current.scrollTop = 0;
+        }
+      }, 100);
     }
     
     // Clear search query
@@ -1536,6 +1546,7 @@ const ProgressBar = () => {
         </div>
         {/* Right panel */}
         <div
+          ref={bookPanelRef}
           className={`book-panel ${isBookPanelCollapsed ? 'collapsed' : ''}`}
           style={{
             width: isBookPanelCollapsed ? "clamp(140px, 20vw, 180px)" : "clamp(280px, 28vw, 400px)",
@@ -1562,28 +1573,34 @@ const ProgressBar = () => {
             }
           }}
         >
-          {/* Search bar - only show when expanded */}
+          {/* Search bar - at the very top, but initially scrolled out of view when book is selected */}
           {!isBookPanelCollapsed && (
             <>
-              <input
-                type="text"
-                value={query}
-                onChange={handleSearchInput}
-                placeholder="Search books..."
-                aria-label="Search books"
-                className="book-search-input"
-                style={{
-                  width: "100%",
-                  padding: "clamp(0.6rem, 1.5vw, 1.2rem)",
-                  borderRadius: "1.2rem",
-                  border: "none",
-                  background: "var(--bg-input)",
-                  color: "var(--text-main)",
-                  fontSize: "clamp(0.9rem, 2vw, 1.1rem)",
-                  marginBottom: "clamp(1vh, 1.5vh, 1.5vh)",
-                  outline: "none",
-                }}
-              />
+              <div style={{ 
+                width: "100%", 
+                marginBottom: selectedBook.bookId && isTouchDevice ? "0" : "clamp(1vh, 1.5vh, 1.5vh)",
+                paddingTop: selectedBook.bookId && isTouchDevice ? "200px" : "0",
+                transition: "padding-top 0.3s ease",
+              }}>
+                <input
+                  type="text"
+                  value={query}
+                  onChange={handleSearchInput}
+                  placeholder="Search books to switch..."
+                  aria-label="Search books"
+                  className="book-search-input"
+                  style={{
+                    width: "100%",
+                    padding: "clamp(0.6rem, 1.5vw, 1.2rem)",
+                    borderRadius: "1.2rem",
+                    border: "none",
+                    background: "var(--bg-input)",
+                    color: "var(--text-main)",
+                    fontSize: "clamp(0.9rem, 2vw, 1.1rem)",
+                    outline: "none",
+                  }}
+                />
+              </div>
               
               {/* Recently Read Section */}
               {recentBooks.length > 0 && !query && (
@@ -1701,44 +1718,90 @@ const ProgressBar = () => {
             </>
           )}
 
-              {/* Reading progress indicator - only show when collapsed and book is selected */}
-          {isBookPanelCollapsed && selectedBook.bookId && (
+              {/* Reading progress indicator - show when book is selected (collapsed on desktop, always on mobile when expanded) */}
+          {selectedBook.bookId && (
             <>
-              <div
-                className="progress-message"
-                style={{
-                  color: "var(--accent)",
-                  fontSize: "clamp(0.95rem, 2.2vw, 1.6rem)",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  marginBottom: "clamp(3vh, 6vh, 6vh)",
-                  wordBreak: "normal",
-                  overflowWrap: "break-word",
-                  whiteSpace: "normal",
-                  maxWidth: "clamp(140px, 20vw, 160px)",
-                  lineHeight: "1.2",
-                  padding: "0 clamp(0.2rem, 1vw, 0.3rem)",
-                  marginTop: "clamp(-10vh, -15vh, -15vh)",
-                }}
-              >
-                {getEncouragingMessage(max ? Math.round((value / max) * 100) : 0)}
-              </div>
-              <div
-                className="progress-percentage"
-                style={{
-                  color: "var(--accent)",
-                  fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  marginBottom: "clamp(1vh, 1.5vh, 1.5vh)",
-                  wordBreak: "break-word",
-                  maxWidth: "clamp(120px, 18vw, 140px)",
-                  lineHeight: "1.2",
-                  padding: "0 clamp(0.3rem, 1vw, 0.5rem)",
-                }}
-              >
-                You've now read <span style={{ fontSize: "clamp(1.4rem, 3.5vw, 1.8rem)" }}>{max ? Math.round((value / max) * 100) : 0}%</span> of
-              </div>
+              {/* On mobile when expanded, show progress at top */}
+              {!isBookPanelCollapsed && isTouchDevice && (
+                <>
+                  <div
+                    className="progress-message"
+                    style={{
+                      color: "var(--accent)",
+                      fontSize: "clamp(1.1rem, 3vw, 1.8rem)",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      marginBottom: "clamp(1vh, 2vh, 2vh)",
+                      marginTop: "clamp(1vh, 2vh, 2vh)",
+                      wordBreak: "normal",
+                      overflowWrap: "break-word",
+                      whiteSpace: "normal",
+                      width: "100%",
+                      lineHeight: "1.3",
+                      padding: "0 clamp(0.5rem, 2vw, 1rem)",
+                    }}
+                  >
+                    {getEncouragingMessage(max ? Math.round((value / max) * 100) : 0)}
+                  </div>
+                  <div
+                    className="progress-percentage"
+                    style={{
+                      color: "var(--accent)",
+                      fontSize: "clamp(1rem, 2.5vw, 1.3rem)",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      marginBottom: "clamp(1.5vh, 3vh, 3vh)",
+                      wordBreak: "break-word",
+                      width: "100%",
+                      lineHeight: "1.3",
+                      padding: "0 clamp(0.5rem, 2vw, 1rem)",
+                    }}
+                  >
+                    You've read <span style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)", fontWeight: 700 }}>{max ? Math.round((value / max) * 100) : 0}%</span>
+                  </div>
+                </>
+              )}
+              
+              {/* On desktop when collapsed, show progress */}
+              {isBookPanelCollapsed && !isTouchDevice && (
+                <>
+                  <div
+                    className="progress-message"
+                    style={{
+                      color: "var(--accent)",
+                      fontSize: "clamp(0.95rem, 2.2vw, 1.6rem)",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      marginBottom: "clamp(3vh, 6vh, 6vh)",
+                      wordBreak: "normal",
+                      overflowWrap: "break-word",
+                      whiteSpace: "normal",
+                      maxWidth: "clamp(140px, 20vw, 160px)",
+                      lineHeight: "1.2",
+                      padding: "0 clamp(0.2rem, 1vw, 0.3rem)",
+                      marginTop: "clamp(-10vh, -15vh, -15vh)",
+                    }}
+                  >
+                    {getEncouragingMessage(max ? Math.round((value / max) * 100) : 0)}
+                  </div>
+                  <div
+                    className="progress-percentage"
+                    style={{
+                      color: "var(--accent)",
+                      fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      marginBottom: "clamp(1vh, 1.5vh, 1.5vh)",
+                      wordBreak: "break-word",
+                      maxWidth: "clamp(120px, 18vw, 140px)",
+                      lineHeight: "1.2",
+                      padding: "0 clamp(0.3rem, 1vw, 0.5rem)",
+                    }}
+                  >
+                    You've now read <span style={{ fontSize: "clamp(1.4rem, 3.5vw, 1.8rem)" }}>{max ? Math.round((value / max) * 100) : 0}%</span> of
+                  </div>
+                </>
+              )}
             </>
           )}
 

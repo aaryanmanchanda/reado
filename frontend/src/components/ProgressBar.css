@@ -154,6 +154,16 @@
     min-width: 100% !important;
     max-height: none !important;
   }
+
+  /* On mobile, when book is selected, scroll to show percentage first */
+  .book-panel:not(.collapsed) {
+    scroll-behavior: smooth;
+  }
+
+  /* Ensure search bar is accessible but initially above viewport when book is selected */
+  .book-panel .book-search-input {
+    margin-top: 0 !important;
+  }
   
   /* Fix horizontal tablet scrolling */
   @media (orientation: landscape) and (max-height: 800px) {
