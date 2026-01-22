@@ -2105,6 +2105,7 @@ const ProgressBar = () => {
           </div>
           )}
         </div>
+      )}
       </div>
       
       {/* Delete Confirmation Modal */}
