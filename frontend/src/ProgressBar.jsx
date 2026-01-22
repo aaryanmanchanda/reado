@@ -51,6 +51,7 @@ const ProgressBar = () => {
   });
   const [user, setUser] = useState(null);
   const [isBookPanelCollapsed, setIsBookPanelCollapsed] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [showNSFW, setShowNSFW] = useState(false);
   const [showSpoilers, setShowSpoilers] = useState(false);
   const [userMarkedSpoiler, setUserMarkedSpoiler] = useState(false);
@@ -150,6 +151,16 @@ const ProgressBar = () => {
   useEffect(() => {
     const recent = getRecentBooks();
     setRecentBooks(recent);
+  }, []);
+
+  // Detect touch device to disable hover behavior
+  useEffect(() => {
+    const checkTouchDevice = () => {
+      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    checkTouchDevice();
+    window.addEventListener('resize', checkTouchDevice);
+    return () => window.removeEventListener('resize', checkTouchDevice);
   }, []);
 
   // Fetch comments from backend for current book and filter by percent
@@ -314,6 +325,18 @@ const ProgressBar = () => {
     addRecentBook(selectedBookData);
     // Update recent books list
     setRecentBooks(getRecentBooks());
+    
+    // On mobile, collapse the panel after selection to prevent glitch
+    if (isTouchDevice) {
+      // Small delay to allow the selection to complete
+      setTimeout(() => {
+        setIsBookPanelCollapsed(true);
+      }, 300);
+    }
+    
+    // Clear search query
+    setQuery('');
+    setBooks([]);
   };
 
   // Sorting logic for comments
@@ -1530,8 +1553,14 @@ const ProgressBar = () => {
             overflowY: "auto",
             overflowX: "hidden",
           }}
-          onMouseEnter={() => setIsBookPanelCollapsed(false)}
-          onMouseLeave={() => setIsBookPanelCollapsed(true)}
+          onMouseEnter={!isTouchDevice ? () => setIsBookPanelCollapsed(false) : undefined}
+          onMouseLeave={!isTouchDevice ? () => setIsBookPanelCollapsed(true) : undefined}
+          onTouchStart={() => {
+            // On mobile, keep panel expanded when touched
+            if (isTouchDevice && isBookPanelCollapsed) {
+              setIsBookPanelCollapsed(false);
+            }
+          }}
         >
           {/* Search bar - only show when expanded */}
           {!isBookPanelCollapsed && (

@@ -31,6 +31,8 @@ const Dashboard = () => {
   const [recError, setRecError] = useState(null);
   const [recLoadingMessageIndex, setRecLoadingMessageIndex] = useState(0);
   const [retryCount, setRetryCount] = useState(0);
+  const [trendingBooks, setTrendingBooks] = useState([]);
+  const [trendingLoading, setTrendingLoading] = useState(false);
 
   useEffect(() => {
     applyThemeVariables(theme);
@@ -218,6 +220,53 @@ const Dashboard = () => {
     // eslint-disable-next-line
   }, [JSON.stringify(bookmarks), JSON.stringify(bookInfoMap)]);
 
+  // Fetch trending books when user has no bookmarks
+  const fetchTrendingBooks = async () => {
+    setTrendingLoading(true);
+    try {
+      const apiKey = process.env.REACT_APP_GOOGLE_BOOKS_API_KEY;
+      if (!apiKey) {
+        console.warn('Google Books API key not configured. Trending books feature disabled.');
+        setTrendingBooks([]);
+        setTrendingLoading(false);
+        return;
+      }
+      
+      // Fetch trending/popular books - using a query that returns popular books
+      const response = await fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=subject:fiction&orderBy=relevance&maxResults=6&key=${apiKey}`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch trending books');
+      }
+      
+      const data = await response.json();
+      const books = (data.items || []).map(item => ({
+        id: item.id,
+        title: item.volumeInfo?.title || 'Unknown Title',
+        thumbnail: item.volumeInfo?.imageLinks?.thumbnail || null,
+      }));
+      
+      setTrendingBooks(books);
+    } catch (err) {
+      console.error('Error fetching trending books:', err);
+      setTrendingBooks([]);
+    } finally {
+      setTrendingLoading(false);
+    }
+  };
+
+  // Fetch trending books when bookmarks are empty
+  useEffect(() => {
+    if (!bookmarks.length && user) {
+      fetchTrendingBooks();
+    } else {
+      setTrendingBooks([]);
+    }
+    // eslint-disable-next-line
+  }, [bookmarks.length, user]);
+
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
     localStorage.setItem('selectedTheme', newTheme);
@@ -306,7 +355,15 @@ const Dashboard = () => {
             <ActivityCard loading={loading} error={error} comments={comments} bookmarks={bookmarks} bookInfoMap={bookInfoMap} />
           </div>
           {/* Third card: full width below */}
-          <Recommendations recLoading={recLoading} recError={recError} recommendations={recommendations} loadingMessageIndex={recLoadingMessageIndex} />
+          <Recommendations 
+            recLoading={recLoading} 
+            recError={recError} 
+            recommendations={recommendations} 
+            loadingMessageIndex={recLoadingMessageIndex}
+            trendingBooks={trendingBooks}
+            trendingLoading={trendingLoading}
+            hasBookmarks={bookmarks.length > 0}
+          />
         </div>
       </div>
     </div>

@@ -76,6 +76,7 @@ const LandingPage = () => {
         style={{
           width: '100%',
           height: NAVBAR_HEIGHT,
+          minHeight: NAVBAR_HEIGHT,
           background: 'var(--bg-main)',
           display: 'flex',
           alignItems: 'center',
@@ -84,6 +85,7 @@ const LandingPage = () => {
           top: 0,
           left: 0,
           zIndex: 100,
+          overflow: 'visible',
         }}
       >
         <div
@@ -153,6 +155,7 @@ const LandingPage = () => {
     justifyContent: 'center',
     position: 'relative',
     zIndex: 1,
+    paddingTop: `clamp(${NAVBAR_HEIGHT}px, ${NAVBAR_HEIGHT}px + 2vw, ${NAVBAR_HEIGHT + 20}px)`,
   }}
 >
 
@@ -179,8 +182,11 @@ const LandingPage = () => {
                 fontWeight: 700,
                 color: 'var(--accent)',
                 margin: 0,
+                marginTop: 'clamp(0.5rem, 2vw, 1rem)',
                 letterSpacing: 'clamp(2px, 0.5vw, 3px)',
                 textShadow: '0 4px 16px rgba(0,0,0,0.2)',
+                position: 'relative',
+                zIndex: 2,
               }}
             >
               reado
