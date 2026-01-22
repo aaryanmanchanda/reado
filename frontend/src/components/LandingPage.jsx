@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { applyThemeVariables, COLORWAYS, NAVBAR_HEIGHT } from '../theme';
+import { applyThemeVariables, COLORWAYS, NAVBAR_HEIGHT, getThemesGrouped } from '../theme';
 import './LandingPage.css';
 
 const LandingPage = () => {
   const [user, setUser] = useState(null);
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem('selectedTheme');
-    return savedTheme || 'yellowDark';
+    return savedTheme || 'natureFresh';
   });
   const [scrollY, setScrollY] = useState(0);
   const [visibleSections, setVisibleSections] = useState(new Set());
@@ -118,9 +118,16 @@ const LandingPage = () => {
               cursor: 'pointer',
             }}
           >
-            {Object.entries(COLORWAYS).map(([key, val]) => (
-              <option key={key} value={key}>{val.name}</option>
-            ))}
+            <optgroup label="Light Themes">
+              {getThemesGrouped().lightThemes.map(([key, val]) => (
+                <option key={key} value={key}>{val.name}</option>
+              ))}
+            </optgroup>
+            <optgroup label="Dark Themes">
+              {getThemesGrouped().darkThemes.map(([key, val]) => (
+                <option key={key} value={key}>{val.name}</option>
+              ))}
+            </optgroup>
           </select>
         </div>
       </nav>

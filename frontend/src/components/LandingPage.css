@@ -209,27 +209,39 @@
 @media (max-width: 768px) {
   .landing-page h1 {
     font-size: clamp(2rem, 8vw, 3rem) !important;
+    margin-bottom: 1rem !important;
   }
 
   .landing-page .static-landing-content {
     padding: 0 1.25rem !important;
+    margin-top: 56px !important; /* Adjusted for smaller navbar */
   }
 
   .landing-features-grid {
     grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  .landing-nav {
+    min-height: 56px !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
   }
 
   .landing-nav .landing-nav-right {
-    margin-right: 1rem !important;
+    margin-right: 0.75rem !important;
+    gap: 0.5rem !important;
   }
 
   .landing-theme-label {
-    font-size: 0.95rem !important;
+    display: none !important;
   }
 
   .landing-nav select {
-    font-size: 1rem !important;
-    padding: 0.4em 0.8em !important;
+    font-size: 0.95rem !important;
+    padding: 0.5em 0.85em !important;
+    min-height: 44px; /* Touch-friendly */
+    min-width: 120px;
   }
 
   .landing-how-step {
@@ -246,25 +258,74 @@
   .cta-section {
     padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem) !important;
   }
+
+  .landing-page button {
+    min-height: 48px; /* Touch-friendly */
+    padding: 0.85rem 2rem !important;
+    font-size: 1.1rem !important;
+  }
+
+  .feature-card {
+    padding: 1.5rem !important;
+  }
+
+  .feature-card h3 {
+    font-size: 1.2rem !important;
+    margin-bottom: 0.75rem !important;
+  }
 }
 
 @media (max-width: 480px) {
+  .landing-nav {
+    min-height: 52px !important;
+    padding-top: 0.4rem !important;
+    padding-bottom: 0.4rem !important;
+  }
+
   .landing-nav > div:first-child {
-    font-size: 1.6rem !important;
-    margin-left: 1rem !important;
+    font-size: clamp(1.2rem, 7vw, 1.6rem) !important;
+    margin-left: 0.5rem !important;
+    letter-spacing: 1px !important;
   }
 
   .landing-page .static-landing-content {
     padding: 0 1rem !important;
+    margin-top: 52px !important;
   }
 
   .landing-theme-label {
     display: none !important;
   }
 
+  .landing-nav select {
+    font-size: 0.85rem !important;
+    padding: 0.45em 0.7em !important;
+    min-height: 42px;
+    min-width: 100px;
+  }
+
   .landing-page button {
     padding: 0.75rem 1.5rem !important;
+    font-size: 1rem !important;
+    min-height: 44px;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .landing-features-grid {
+    gap: 1rem !important;
+  }
+
+  .feature-card {
+    padding: 1.25rem !important;
+  }
+
+  .feature-card h3 {
     font-size: 1.1rem !important;
+  }
+
+  .feature-card p {
+    font-size: 0.9rem !important;
   }
 }
 

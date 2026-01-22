@@ -17,7 +17,7 @@ const OPENROUTER_API_KEY = process.env.REACT_APP_OPENROUTER_API_KEY;
 const Dashboard = () => {
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem('selectedTheme');
-    return savedTheme || 'yellowDark';
+    return savedTheme || 'natureFresh';
   });
   const [user, setUser] = useState(null);
   const [bookmarks, setBookmarks] = useState([]);

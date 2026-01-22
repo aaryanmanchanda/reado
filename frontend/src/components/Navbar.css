@@ -13,17 +13,27 @@
   gap: 8px !important;
 }
 
+/* Mobile optimizations for better touch targets and readability */
 @media (max-width: 768px) {
   .navbar-app {
     padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    height: auto;
+    min-height: 56px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   .navbar-logo {
-    margin-left: 1rem !important;
+    margin-left: 0.75rem !important;
+    font-size: clamp(1.4rem, 6vw, 1.8rem) !important;
+    letter-spacing: 1.5px !important;
   }
 
   .navbar-right {
-    margin-right: 1rem !important;
+    margin-right: 0.75rem !important;
+    gap: 0.5rem !important;
+    flex-wrap: wrap;
   }
 
   .navbar-theme-label {
@@ -35,24 +45,61 @@
   }
 
   .navbar-app select {
-    font-size: 0.9rem !important;
-    padding: 0.35em 0.75em !important;
+    font-size: 0.95rem !important;
+    padding: 0.5em 0.85em !important;
+    min-height: 44px; /* Touch-friendly */
+    min-width: 120px;
   }
 
   .navbar-app .logout-btn,
   .navbar-app .login-btn {
-    font-size: 0.9rem !important;
-    padding: 0.4em 0.9em !important;
+    font-size: 0.95rem !important;
+    padding: 0.5em 1em !important;
+    min-height: 44px; /* Touch-friendly */
+    min-width: 80px;
+  }
+
+  .navbar-app img {
+    width: 36px !important;
+    height: 36px !important;
   }
 }
 
 @media (max-width: 480px) {
+  .navbar-app {
+    min-height: 52px;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+
   .navbar-logo {
-    font-size: 1.25rem !important;
+    font-size: clamp(1.2rem, 7vw, 1.6rem) !important;
+    margin-left: 0.5rem !important;
+    letter-spacing: 1px !important;
+  }
+
+  .navbar-right {
+    margin-right: 0.5rem !important;
+    gap: 0.4rem !important;
   }
 
   .navbar-app select {
-    font-size: 0.8rem !important;
-    padding: 0.3em 0.6em !important;
+    font-size: 0.85rem !important;
+    padding: 0.45em 0.7em !important;
+    min-height: 42px;
+    min-width: 100px;
+  }
+
+  .navbar-app .logout-btn,
+  .navbar-app .login-btn {
+    font-size: 0.85rem !important;
+    padding: 0.45em 0.85em !important;
+    min-height: 42px;
+    min-width: 70px;
+  }
+
+  .navbar-app img {
+    width: 32px !important;
+    height: 32px !important;
   }
 }

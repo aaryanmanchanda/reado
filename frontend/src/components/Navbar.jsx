@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { NAVBAR_HEIGHT, COLORWAYS } from '../theme';
+import { NAVBAR_HEIGHT, COLORWAYS, getThemesGrouped } from '../theme';
 import './Navbar.css';
 
 const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }) => {
@@ -60,9 +60,16 @@ const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }
             cursor: 'pointer',
           }}
         >
-          {Object.entries(COLORWAYS).map(([key, val]) => (
-            <option key={key} value={key}>{val.name}</option>
-          ))}
+          <optgroup label="Light Themes">
+            {getThemesGrouped().lightThemes.map(([key, val]) => (
+              <option key={key} value={key}>{val.name}</option>
+            ))}
+          </optgroup>
+          <optgroup label="Dark Themes">
+            {getThemesGrouped().darkThemes.map(([key, val]) => (
+              <option key={key} value={key}>{val.name}</option>
+            ))}
+          </optgroup>
         </select>
         {user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 16 }}>

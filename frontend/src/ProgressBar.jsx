@@ -45,9 +45,9 @@ const ProgressBar = () => {
   const [sortType, setSortType] = useState('Best');
   const [displayedComments, setDisplayedComments] = useState([]);
   const [theme, setTheme] = useState(() => {
-    // Load theme from localStorage, default to 'yellowDark' if not found
+    // Load theme from localStorage, default to 'natureFresh' if not found
     const savedTheme = localStorage.getItem('selectedTheme');
-    return savedTheme || 'yellowDark';
+    return savedTheme || 'natureFresh';
   });
   const [user, setUser] = useState(null);
   const [isBookPanelCollapsed, setIsBookPanelCollapsed] = useState(false);
@@ -742,6 +742,8 @@ const ProgressBar = () => {
                               ? '#e3f0ff'  // Faint blue
                               : theme === 'blueSerene' 
                                 ? '#e8f0f8'  // Faint teal
+                              : theme === 'pinkBlossom'
+                                ? '#FFF0F5'  // Faint pink
                                 : '#f0f8e8', // Faint green for nature theme
                           color: theme === 'yellowDark' || theme === 'redBlack' ? '#ffffff' : '#000000',
                           borderRadius: "1rem",
