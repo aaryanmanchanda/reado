@@ -286,6 +286,13 @@
     font-size: clamp(1.2rem, 7vw, 1.6rem) !important;
     margin-left: 0.5rem !important;
     letter-spacing: 1px !important;
+    z-index: 101 !important;
+    position: relative !important;
+  }
+
+  .landing-nav-right {
+    z-index: 100 !important;
+    position: relative !important;
   }
 
   .landing-page .static-landing-content {

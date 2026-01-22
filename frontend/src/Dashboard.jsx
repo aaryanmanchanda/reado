@@ -29,6 +29,8 @@ const Dashboard = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [recLoading, setRecLoading] = useState(false);
   const [recError, setRecError] = useState(null);
+  const [recLoadingMessageIndex, setRecLoadingMessageIndex] = useState(0);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     applyThemeVariables(theme);
@@ -90,12 +92,23 @@ const Dashboard = () => {
 
   // Fetch recommendations from OpenRouter when bookmarks change
   useEffect(() => {
-    async function getRecommendations() {
+    let messageInterval;
+    let retryTimeout;
+    
+    async function getRecommendations(attempt = 0) {
       setRecLoading(true);
       setRecError(null);
       setRecommendations([]);
+      setRecLoadingMessageIndex(attempt);
+      
+      // Rotate loading messages every 2 seconds
+      messageInterval = setInterval(() => {
+        setRecLoadingMessageIndex(prev => (prev + 1) % 10);
+      }, 2000);
+      
       try {
         if (!bookmarks.length) {
+          clearInterval(messageInterval);
           setRecLoading(false);
           return;
         }
@@ -105,6 +118,7 @@ const Dashboard = () => {
           return info?.title || '';
         }).filter(Boolean);
         if (!titles.length) {
+          clearInterval(messageInterval);
           setRecLoading(false);
           return;
         }
@@ -112,7 +126,8 @@ const Dashboard = () => {
         if (!OPENROUTER_API_KEY) {
           console.warn('OpenRouter API key not configured. Recommendations feature disabled.');
           setRecommendations([]);
-          setLoading(false);
+          setRecLoading(false);
+          clearInterval(messageInterval);
           return;
         }
         
@@ -133,7 +148,28 @@ const Dashboard = () => {
             max_tokens: 200,
           })
         });
-        if (!resp.ok) throw new Error('Failed to fetch recommendations');
+        
+        // Handle 401/403 errors with retry
+        if (resp.status === 401 || resp.status === 403) {
+          clearInterval(messageInterval);
+          if (attempt < 3) {
+            // Retry after a delay with a new message
+            setRetryCount(prev => prev + 1);
+            retryTimeout = setTimeout(() => {
+              getRecommendations(attempt + 1);
+            }, 2000);
+            return;
+          } else {
+            setRecError('Unable to load recommendations. Please try again later.');
+            setRecLoading(false);
+            return;
+          }
+        }
+        
+        if (!resp.ok) {
+          clearInterval(messageInterval);
+          throw new Error(`Failed to fetch recommendations: ${resp.status}`);
+        }
         const data = await resp.json();
         // Try to parse JSON array from response
         let titlesArr = [];
@@ -146,6 +182,7 @@ const Dashboard = () => {
             titlesArr = JSON.parse(data.choices[0].message.content);
           }
         } catch {
+          clearInterval(messageInterval);
           setRecError('Could not parse recommendations.');
           setRecLoading(false);
           return;
@@ -154,14 +191,30 @@ const Dashboard = () => {
         const recBooks = await Promise.all(
           titlesArr.map(async (title) => await fetchBookInfoByTitle(title))
         );
+        clearInterval(messageInterval);
         setRecommendations(recBooks);
+        setRecLoading(false);
       } catch (err) {
-        setRecError('Failed to get recommendations.');
-      } finally {
+        clearInterval(messageInterval);
+        // If it's a 401/403 and we haven't retried too many times, retry
+        if ((err.message.includes('401') || err.message.includes('403')) && attempt < 3) {
+          setRetryCount(prev => prev + 1);
+          retryTimeout = setTimeout(() => {
+            getRecommendations(attempt + 1);
+          }, 2000);
+          return;
+        }
+        setRecError('Failed to get recommendations. Please try again later.');
         setRecLoading(false);
       }
     }
-    getRecommendations();
+    
+    getRecommendations(0);
+    
+    return () => {
+      if (messageInterval) clearInterval(messageInterval);
+      if (retryTimeout) clearTimeout(retryTimeout);
+    };
     // eslint-disable-next-line
   }, [JSON.stringify(bookmarks), JSON.stringify(bookInfoMap)]);
 
@@ -253,7 +306,7 @@ const Dashboard = () => {
             <ActivityCard loading={loading} error={error} comments={comments} bookmarks={bookmarks} bookInfoMap={bookInfoMap} />
           </div>
           {/* Third card: full width below */}
-          <Recommendations recLoading={recLoading} recError={recError} recommendations={recommendations} />
+          <Recommendations recLoading={recLoading} recError={recError} recommendations={recommendations} loadingMessageIndex={recLoadingMessageIndex} />
         </div>
       </div>
     </div>

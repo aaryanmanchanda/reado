@@ -5,12 +5,17 @@
     padding-left: 12px !important;
     padding-right: 12px !important;
     padding-top: calc(56px + 1rem) !important; /* Adjusted for smaller navbar */
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
 
   .dashboard-card-container {
     padding: 24px 20px 32px 20px !important;
     gap: 28px !important;
     margin: 0 8px !important;
+    box-sizing: border-box !important;
+    max-width: calc(100% - 16px) !important;
+    width: calc(100% - 16px) !important;
   }
 
   .dashboard-top-row {
@@ -30,6 +35,7 @@
     min-width: 0 !important;
     max-width: 100% !important;
     padding: 1.5rem 1.25rem !important;
+    box-sizing: border-box !important;
   }
 
   .profile-card h2 {
@@ -48,6 +54,7 @@
     width: 100% !important;
     padding: 1.2rem 1rem !important;
     gap: 16px !important;
+    box-sizing: border-box !important;
   }
 
   .activity-card .activity-excerpt {
@@ -74,6 +81,9 @@
 
   .recommendations-card {
     padding: 1.2rem 1rem !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   .recommendations-list {
@@ -101,12 +111,17 @@
     padding-left: 8px !important;
     padding-right: 8px !important;
     padding-top: calc(52px + 0.75rem) !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
 
   .dashboard-card-container {
     padding: 18px 14px 24px 14px !important;
     gap: 22px !important;
     margin: 0 4px !important;
+    box-sizing: border-box !important;
+    max-width: calc(100% - 8px) !important;
+    width: calc(100% - 8px) !important;
   }
 
   .dashboard-top-row {

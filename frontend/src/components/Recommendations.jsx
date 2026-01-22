@@ -1,6 +1,7 @@
 import React from 'react';
+import BookLoadingAnimation from './BookLoadingAnimation';
 
-const Recommendations = ({ recLoading, recError, recommendations }) => (
+const Recommendations = ({ recLoading, recError, recommendations, loadingMessageIndex = 0 }) => (
   <div
     className="recommendations-card"
     style={{
@@ -27,7 +28,7 @@ const Recommendations = ({ recLoading, recError, recommendations }) => (
       </div>
       <div style={{ height: 15 }} />
       {recLoading ? (
-        <div style={{ color: 'var(--accent)', fontWeight: 600 }}>Loading recommendations...</div>
+        <BookLoadingAnimation messageIndex={loadingMessageIndex} />
       ) : recError ? (
         <div style={{ color: 'var(--accent)', fontWeight: 600 }}>{recError}</div>
       ) : recommendations.length === 0 ? (

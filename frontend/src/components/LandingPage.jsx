@@ -95,6 +95,9 @@ const LandingPage = () => {
             letterSpacing: '2px',
             userSelect: 'none',
             textShadow: '0 2px 8px rgba(0,0,0,0.18)',
+            position: 'relative',
+            zIndex: 101,
+            flexShrink: 0,
           }}
         >
           reado

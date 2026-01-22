@@ -484,6 +484,7 @@ const ProgressBar = () => {
               boxShadow: "0 2px 8px rgba(0,0,0,0.13)",
               gap: "clamp(0.6rem, 1.5vw, 1rem)",
               marginTop: "clamp(1rem, 3vh, 2.5rem)",
+              boxSizing: "border-box",
             }}
           >
             <textarea
@@ -618,6 +619,7 @@ const ProgressBar = () => {
                 flexWrap: "wrap",
                 gap: "clamp(0.8rem, 2vw, 1.2rem)",
                 overflowY: "auto",
+                overflowX: "hidden",
                 height: "clamp(200px, 40vh, 350px)",
                 background: "var(--comment-bg)",
                 borderRadius: "1.2rem",
@@ -625,6 +627,7 @@ const ProgressBar = () => {
                 alignItems: "flex-start",
                 padding: "clamp(0.8rem, 2vw, 1.2rem)",
                 position: 'relative',
+                boxSizing: 'border-box',
               }}
             >
               {/* Comments header: sort + NSFW/Spoiler toggles – stacked on mobile to avoid overlap */}
