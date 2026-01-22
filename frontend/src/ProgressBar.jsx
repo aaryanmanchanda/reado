@@ -474,23 +474,148 @@ const ProgressBar = () => {
     }
   };
 
+  // Check if we should use mobile book-selected layout
+  const [useMobileBookLayout, setUseMobileBookLayout] = useState(false);
+  
+  useEffect(() => {
+    const checkLayout = () => {
+      setUseMobileBookLayout(isTouchDevice && selectedBook.bookId && window.innerWidth <= 1024);
+    };
+    checkLayout();
+    window.addEventListener('resize', checkLayout);
+    return () => window.removeEventListener('resize', checkLayout);
+  }, [isTouchDevice, selectedBook.bookId]);
+
   return (
     <div className="progress-bar-container" style={{ minHeight: "100vh", background: "var(--bg-main)" }}>
       <Navbar theme={theme} onThemeChange={handleThemeChange} user={user} onLogout={handleLogout} showUserNavToDashboard={true} />
       {/* Main content below navbar */}
       <div
-        className="progress-bar-main-layout"
+        className={`progress-bar-main-layout ${useMobileBookLayout ? 'mobile-book-selected' : ''}`}
         style={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: useMobileBookLayout ? "column" : "row",
           minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
           paddingTop: NAVBAR_HEIGHT,
+          transition: "flex-direction 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
+        {/* Mobile top 20% section when book is selected */}
+        {useMobileBookLayout && (
+          <div
+            className="mobile-book-header"
+            style={{
+              height: "20vh",
+              minHeight: "20vh",
+              maxHeight: "20vh",
+              width: "100%",
+              background: "var(--bg-panel)",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              padding: "1rem",
+              boxSizing: "border-box",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              zIndex: 10,
+              transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          >
+            {/* Left side: Thumbnail and Title */}
+            <div style={{ 
+              flex: "0 0 auto", 
+              display: "flex", 
+              flexDirection: "row", 
+              alignItems: "center", 
+              gap: "0.75rem",
+              marginRight: "1rem",
+            }}>
+              {selectedBook.thumbnail ? (
+                <img
+                  src={selectedBook.thumbnail}
+                  alt={selectedBook.title}
+                  style={{
+                    width: "60px",
+                    height: "85px",
+                    borderRadius: "8px",
+                    objectFit: "cover",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                    flexShrink: 0,
+                  }}
+                />
+              ) : (
+                <div style={{
+                  width: "60px",
+                  height: "85px",
+                  borderRadius: "8px",
+                  background: "var(--bg-input)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "var(--text-main)",
+                  fontSize: "1.5rem",
+                  flexShrink: 0,
+                }}>
+                  📖
+                </div>
+              )}
+              <div style={{ 
+                display: "flex", 
+                flexDirection: "column", 
+                justifyContent: "center",
+                minWidth: 0,
+                flex: 1,
+              }}>
+                <div style={{
+                  color: "var(--accent)",
+                  fontSize: "clamp(0.9rem, 3vw, 1.1rem)",
+                  fontWeight: 600,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  lineHeight: "1.3",
+                }}>
+                  {selectedBook.title}
+                </div>
+              </div>
+            </div>
+            
+            {/* Right side: Message and Percentage */}
+            <div style={{ 
+              flex: "1 1 auto", 
+              display: "flex", 
+              flexDirection: "column", 
+              alignItems: "flex-end", 
+              justifyContent: "center",
+              textAlign: "right",
+              minWidth: 0,
+            }}>
+              <div style={{
+                color: "var(--accent)",
+                fontSize: "clamp(0.85rem, 2.5vw, 1rem)",
+                fontWeight: "bold",
+                marginBottom: "0.25rem",
+                lineHeight: "1.2",
+              }}>
+                {getEncouragingMessage(max ? Math.round((value / max) * 100) : 0)}
+              </div>
+              <div style={{
+                color: "var(--accent)",
+                fontSize: "clamp(1.2rem, 4vw, 1.8rem)",
+                fontWeight: 700,
+                lineHeight: "1.2",
+              }}>
+                {max ? Math.round((value / max) * 100) : 0}%
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Main slider area */}
         <div
           id="main-content"
-          className={`main-slider-area ${isDictionaryOpen ? 'shrink-for-dictionary' : ''}`}
+          className={`main-slider-area ${isDictionaryOpen ? 'shrink-for-dictionary' : ''} ${useMobileBookLayout ? 'mobile-book-content' : ''}`}
           role="main"
           tabIndex={-1}
           style={{
@@ -498,7 +623,22 @@ const ProgressBar = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
+            height: useMobileBookLayout ? "80vh" : `calc(100vh - ${NAVBAR_HEIGHT}px)`,
+            maxHeight: useMobileBookLayout ? "80vh" : "none",
+            overflowY: "auto",
+            overflowX: "hidden",
+            transition: "height 0.4s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+            position: "relative",
+          }}
+          onScroll={(e) => {
+            // Show search panel when scrolled to top
+            if (useMobileBookLayout && bookPanelRef.current) {
+              if (e.currentTarget.scrollTop <= 10) {
+                bookPanelRef.current.style.transform = "translateY(0)";
+              } else {
+                bookPanelRef.current.style.transform = "translateY(-100%)";
+              }
+            }
           }}
         >
           {/* Comments grid fills all available space above slider */}
@@ -1544,7 +1684,8 @@ const ProgressBar = () => {
             {value}/{max}
           </div>
         </div>
-        {/* Right panel */}
+        {/* Right panel - hidden on mobile when book is selected */}
+        {!useMobileBookLayout && (
         <div
           ref={bookPanelRef}
           className={`book-panel ${isBookPanelCollapsed ? 'collapsed' : ''}`}

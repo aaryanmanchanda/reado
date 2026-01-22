@@ -126,10 +126,51 @@
   min-width: 0;
 }
 
+/* Mobile book-selected layout */
+.progress-bar-main-layout.mobile-book-selected {
+  flex-direction: column !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-book-header {
+  position: sticky;
+  top: 64px;
+  z-index: 10;
+}
+
+.mobile-book-content {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-book-search-panel {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Tablet and below */
 @media (max-width: 1024px) {
   .progress-bar-main-layout {
     flex-direction: column;
+  }
+
+  .progress-bar-main-layout.mobile-book-selected {
+    flex-direction: column !important;
+  }
+
+  .mobile-book-header {
+    top: 56px;
+  }
+
+  .mobile-book-search-panel {
+    top: 56px;
+    max-height: calc(100vh - 56px);
   }
   
   .main-slider-area {
@@ -626,6 +667,24 @@
   .dictionary-panel {
     top: 52px !important; /* Adjusted for small mobile navbar */
     height: calc(100vh - 52px) !important;
+  }
+
+  .mobile-book-header {
+    top: 52px;
+    height: 20vh !important;
+    min-height: 20vh !important;
+    max-height: 20vh !important;
+    padding: 0.75rem !important;
+  }
+
+  .mobile-book-content {
+    height: 80vh !important;
+    max-height: 80vh !important;
+  }
+
+  .mobile-book-search-panel {
+    top: 52px;
+    max-height: calc(100vh - 52px);
   }
 }
 
