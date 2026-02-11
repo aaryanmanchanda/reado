@@ -1,1 +1,27 @@
-scripts/start.sh: line 33: setsid: command not found
+Server running on port 5001
+GET /health 503 11ms
+MongoDB connected
+GET /health 200 2ms
+GET /health 200 1ms
+GET /health 200 0ms
+GET /slow 503 3002ms
+GET /slow 503 3004ms
+GET /slow 503 3001ms
+GET /slow 503 3001ms
+GET /slow 503 3001ms
+GET /slow 503 3002ms
+GET /slow 503 3001ms
+GET /slow 503 3002ms
+GET /slow 503 3002ms
+GET /slow 503 3002ms
+GET /health 200 0ms
+GET /health 200 1ms
+GET /health 200 1ms
+GET /health 200 0ms
+GET /health 200 0ms
+GET /health 200 1ms
+GET /health 200 1ms
+GET /health 200 0ms
+GET /health 200 0ms
+GET /health 200 1ms
+GET /health 200 0ms
