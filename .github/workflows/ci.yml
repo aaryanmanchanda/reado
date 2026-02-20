@@ -20,3 +20,14 @@ jobs:
       run: |
         cd backend
         npm ci
+
+    - name: Start backend
+      run: |
+        cd backend
+        node server.js &
+        sleep 5
+      env:
+        MONGODB_URI: mongodb://localhost:27017/test
+
+    - name: Liveness check
+      run: curl --fail http://localhost:5001/live
