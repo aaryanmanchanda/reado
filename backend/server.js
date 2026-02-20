@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+const VERSION = process.env.VERSION || "v1";
 const app = express();
 const allowedOrigins = [
   "https://www.reado.co.in",
@@ -11,6 +12,7 @@ const allowedOrigins = [
   "http://localhost:3000"
 ];
 
+let ready = false; // Check before adding to load balancer rotation
 let totalRequests = 0;
 let totalErrors = 0;
 let totalLatency = 0;
@@ -56,7 +58,7 @@ app.use(express.json());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log('MongoDB connected'))
+.then(() =>{ console.log('MongoDB connected'); ready=true;})
 .catch(err => console.error(err));
 
 // Request timeout manager
@@ -88,8 +90,21 @@ app.use((req, res, next) => {
 	});
 	next();
 });
+// ===================== Fail fast, Communicate well ======================
 
-// Example route
+// New instance injection evaluation middleware (simpler than it sounds)
+app.use((req, res, next) => {
+	if (req.path === '/live' || req.path === '/ready' || req.path === '/health') return next();
+	if (!ready) return res.status(503).send("warming up");
+	next();
+});
+// ========================================================================
+
+
+const path = require("path");
+app.use(express.static(path.join(__dirname,"../public")));
+
+
 app.get('/', (req, res) => {
   res.send('API is running');
 });
@@ -97,6 +112,18 @@ app.get('/', (req, res) => {
 // CORS test route
 app.get('/test-cors', (req, res) => {
   res.json({ message: 'CORS is working!' });
+});
+
+
+// Ready
+app.get('/ready', (req, res) => {
+	if (ready) return res.status(200).send('ready');
+	return res.status(503).send('starting');
+});
+
+// Alive
+app.get('/live', (req, res) => {
+	res.status(200).send(`alive-${VERSION}`)
 });
 
 const commentRoutes = require('./routes/comments');
@@ -170,6 +197,9 @@ app.get('/slow', async (req, res) => {
   }
 });
 
+app.get("*", (req,res) => {
+	res.sendFile(path.join(__dirname, "../public/index.html"));
+});
 
 app.use('/comments', commentRoutes);
 app.use('/users', userRoutes);
