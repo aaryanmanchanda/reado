@@ -31,3 +31,31 @@ jobs:
 
     - name: Liveness check
       run: curl --fail http://localhost:5001/live
+    
+    - name: Install frontend dependencies
+      run:  |
+        cd frontend
+        npm ci
+    
+    - name: Build frontend
+      run: |
+	cd frontend
+        npm run build
+
+    - name: Build docker image
+      run: docker build -t reado-ci-test .
+   
+    - name: Run container
+      run: |
+        docker run -d -p 3000:3000 \
+          -e PORT=3000 \
+          -e MONGODB_URI=mongodb://localhost:27017/test \
+          --name reado-test reado-ci-test
+          sleep 5
+
+    - name: Container liveness check
+      run: curl --fail http://localhost:3000/live
+
+    - name: Stop container
+      run: docker stop reado-test
+    
