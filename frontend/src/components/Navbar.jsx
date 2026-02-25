@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { NAVBAR_HEIGHT, COLORWAYS, getThemesGrouped } from '../theme';
+import { NAVBAR_HEIGHT, getThemesGrouped } from '../theme';
 import './Navbar.css';
 
 const Navbar = ({ theme, onThemeChange, user, onLogout, showUserNavToDashboard }) => {

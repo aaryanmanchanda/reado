@@ -6,7 +6,7 @@ import Navbar from './components/Navbar';
 import ProfileCard from './components/ProfileCard';
 import ActivityCard from './components/ActivityCard';
 import Recommendations from './components/Recommendations';
-import { COLORWAYS, NAVBAR_HEIGHT, applyThemeVariables } from './theme';
+import { NAVBAR_HEIGHT, applyThemeVariables } from './theme';
 import { fetchBookInfoById, fetchBookInfoByTitle } from './utils/bookCache';
 import apiFetch from './utils/apiFetch';
 
@@ -30,7 +30,6 @@ const Dashboard = () => {
   const [recLoading, setRecLoading] = useState(false);
   const [recError, setRecError] = useState(null);
   const [recLoadingMessageIndex, setRecLoadingMessageIndex] = useState(0);
-  const [retryCount, setRetryCount] = useState(0);
   const [trendingBooks, setTrendingBooks] = useState([]);
   const [trendingLoading, setTrendingLoading] = useState(false);
 

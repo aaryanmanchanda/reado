@@ -135,14 +135,6 @@ const ProgressBar = () => {
     return "You did it!";
   };
 
-  // Function to get font size based on message length
-  const getMessageFontSize = (message) => {
-    if (message.length <= 10) return "2.2rem";
-    if (message.length <= 12) return "2rem";
-    if (message.length <= 14) return "1.8rem";
-    return "1.6rem";
-  };
-
   // Apply theme CSS variables to document root
   useEffect(() => {
     applyThemeVariables(theme);
@@ -228,9 +220,9 @@ const ProgressBar = () => {
   const handleDecrement = () => {
     setValue((v) => Math.max(min, v - 1));
   };
-  const handleIncrement = () => {
+  const handleIncrement = useCallback(() => {
     setValue((v) => Math.min(max, v + 1));
-  };
+  });
 
   // Keyboard controls for page navigation
   useEffect(() => {
