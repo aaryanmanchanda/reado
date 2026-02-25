@@ -222,7 +222,7 @@ const ProgressBar = () => {
   };
   const handleIncrement = useCallback(() => {
     setValue((v) => Math.min(max, v + 1));
-  });
+  }, [max]);
 
   // Keyboard controls for page navigation
   useEffect(() => {
@@ -245,7 +245,7 @@ const ProgressBar = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [min, max]);
+  }, [handleIncrement, handleDecrement]);
 
   // Google Books search logic
   const searchBooks = useCallback(async (searchQuery) => {
