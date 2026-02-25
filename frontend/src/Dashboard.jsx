@@ -39,7 +39,6 @@ const Dashboard = () => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) setUser(JSON.parse(savedUser));
   }, [theme]);
-
   // Fetch bookmarks and comments for the user
   useEffect(() => {
     const fetchData = async () => {
@@ -90,7 +89,6 @@ const Dashboard = () => {
 
   // Helper to get book info from Google Books API by title (uses cache utility)
   // Note: This function name conflicts with the imported one, so we'll use the imported function directly
-
   // Fetch recommendations from OpenRouter when bookmarks change
   useEffect(() => {
     let messageInterval;
@@ -154,8 +152,6 @@ const Dashboard = () => {
         if (resp.status === 401 || resp.status === 403) {
           clearInterval(messageInterval);
           if (attempt < 3) {
-            // Retry after a delay with a new message
-            setRetryCount(prev => prev + 1);
             retryTimeout = setTimeout(() => {
               getRecommendations(attempt + 1);
             }, 2000);
@@ -199,7 +195,6 @@ const Dashboard = () => {
         clearInterval(messageInterval);
         // If it's a 401/403 and we haven't retried too many times, retry
         if ((err.message.includes('401') || err.message.includes('403')) && attempt < 3) {
-          setRetryCount(prev => prev + 1);
           retryTimeout = setTimeout(() => {
             getRecommendations(attempt + 1);
           }, 2000);
