@@ -33,13 +33,13 @@ jobs:
       run: curl --fail http://localhost:5001/live
     
     - name: Install frontend dependencies
-      run:  |
+      run: |
         cd frontend
         npm ci
     
     - name: Build frontend
       run: |
-	cd frontend
+        cd frontend
         npm run build
 
     - name: Build docker image
