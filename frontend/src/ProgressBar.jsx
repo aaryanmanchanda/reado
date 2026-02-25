@@ -217,9 +217,9 @@ const ProgressBar = () => {
   };
 
   // Handlers for arrow buttons
-  const handleDecrement = () => {
+  const handleDecrement = useCallback(() => {
     setValue((v) => Math.max(min, v - 1));
-  };
+  }, [min]);
   const handleIncrement = useCallback(() => {
     setValue((v) => Math.min(max, v + 1));
   }, [max]);
