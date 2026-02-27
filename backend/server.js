@@ -3,6 +3,15 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+if (!process.env.MONGODB_URI) {
+	console.error("FATAL: MONGODB_URI is not defined.");
+	process.exit(1);
+}
+if (!process.env.PORT) {
+	console.error("FATAL: PORT is not defined.");
+	process.exit(1);
+}
+
 const VERSION = process.env.VERSION || "v1";
 const app = express();
 const allowedOrigins = [

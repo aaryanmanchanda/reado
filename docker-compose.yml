@@ -1,10 +1,11 @@
 services:
   backend:
+    platform: linux/amd64
     image: ghcr.io/aaryanmanchanda/reado:main
     container_name: reado-backend
     environment:
       PORT: 3000
-      MONGODB_URI: ${MONGODB_URI}
+      MONGODB_URI: ${MONGODB_URI:?MONGODB_URI not set}
     expose:
       - "3000"
     restart: unless-stopped
