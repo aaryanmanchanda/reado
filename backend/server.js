@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+throw new Error("Simulated production failure");
+
 if (!process.env.MONGODB_URI) {
 	console.error("FATAL: MONGODB_URI is not defined.");
 	process.exit(1);
