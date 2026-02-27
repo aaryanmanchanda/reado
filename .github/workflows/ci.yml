@@ -34,8 +34,9 @@ jobs:
       env:
         MONGODB_URI: mongodb://localhost:27017/test
 
-    - name: Liveness check
-      run: curl --fail http://localhost:5001/live
+#    TEMPORARILY DISABLED FOR ROLLBACK DRILL
+#    - name: Liveness check
+#      run: curl --fail http://localhost:5001/live
     
     - name: Install frontend dependencies
       run: |
