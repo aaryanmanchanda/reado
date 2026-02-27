@@ -7,7 +7,7 @@ echo "Stopping Reado initiated..."
 #stop backend
 if [ -f .backend.pid ]; then
   BACKEND_PID=$(cat .backend.pid)
-  kill -- -$BACKEND_PID 2>/dev/null || true
+  kill $BACKEND_PID 2>/dev/null || true
   rm .backend.pid
   echo "Backend stopped:D"
 else
@@ -17,7 +17,7 @@ fi
 #stop frontend
 if [ -f .frontend.pid ]; then
   FRONTEND_PID=$(cat .frontend.pid)
-  kill -- -$FRONTEND_PID 2>/dev/null || true
+  kill $(lsof -ti :3000) 2>/dev/null || true
   rm .frontend.pid
   echo "Frontend stopped:D"
 else

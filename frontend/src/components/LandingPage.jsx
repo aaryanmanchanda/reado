@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { applyThemeVariables, COLORWAYS, NAVBAR_HEIGHT, getThemesGrouped } from '../theme';
+import { applyThemeVariables, NAVBAR_HEIGHT, getThemesGrouped } from '../theme';
 import './LandingPage.css';
 
 const LandingPage = () => {

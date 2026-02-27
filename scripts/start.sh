@@ -30,14 +30,20 @@ fi
 echo "Starting backend..."
 
 cd backend
-setsid node server.js > ../backend.log 2>&1 &
+node server.js > ../backend.log 2>&1 &
 BACKEND_PID=$!
 cd ..
+
+echo "Waiting for DB to connect..."
+until curl -s http://localhost:5001/health | grep -q '"status":"ok"'; do
+  sleep 1
+done
+echo "Backend ready!"
 
 echo "Starting frontend..."
 
 cd frontend
-setsid PORT=3000 npm start > ../frontend.log 2>&1 &
+PORT=3000 npm start > ../frontend.log 2>&1 &
 FRONTEND_PID=$!
 cd ..
 
