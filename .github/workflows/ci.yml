@@ -52,7 +52,7 @@ jobs:
     
     - name: Build docker image
       run: |
-        docker_build \
+        docker build \
           -t ghcr.io/aaryanmanchanda/reado:${{github.sha}} \
           -t ghcr.io/aaryanmanchanda/reado:main \
           .
